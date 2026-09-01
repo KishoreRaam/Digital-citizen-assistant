@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thaguthi — Welfare Scheme Assistant</title>
+<meta name="description" content="Describe your situation in Tamil, Hindi, or English and find which government welfare schemes you likely qualify for.">
+<meta name="theme-color" content="#F2EDC2">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Serif+Tamil:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="#" class="brand" id="brandReset">
+        <div class="brand-seal">த</div>
+        <div>
+          <div class="brand-name">Thaguthi</div>
+          <div class="brand-tag" id="brandTag">Welfare Scheme Assistant</div>
+        </div>
+      </a>
+
+      <div class="header-right">
+        <nav class="site-nav" id="siteNav">
+          <a href="#how-it-works" class="nav-link" data-i18n="navHow">How it works</a>
+          <a href="#form-assistant" class="nav-link" data-i18n="navForm">Form Assistant</a>
+          <a href="#schemes-we-cover" class="nav-link" data-i18n="navSchemes">Schemes we cover</a>
+          <a href="#why-this-exists" class="nav-link" data-i18n="navWhy">Why this exists</a>
+          <a href="#app" class="nav-cta" data-i18n="navCta">Try it now</a>
+        </nav>
+
+        <div class="lang-switch" aria-hidden="true" hidden>
+          <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#346739" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
+            <span id="langBtnLabel">English</span>
+            <svg id="langCaret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#79AE6F" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="lang-menu" id="langMenu" hidden>
+            <button class="lang-row" data-lang="en" type="button">
+              <span>English</span><span class="lang-check" data-check="en"></span>
+            </button>
+            <button class="lang-row" data-lang="ta" type="button">
+              <span class="tamil">தமிழ்</span><span class="lang-check" data-check="ta"></span>
+            </button>
+            <button class="lang-row" data-lang="hi" type="button">
+              <span class="deva">हिंदी</span><span class="lang-check" data-check="hi"></span>
+            </button>
+          </div>
+        </div>
+
+        <button class="nav-toggle" id="navToggle" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#346739" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+
+    <!-- ============ INPUT SCREEN ============ -->
+    <section class="screen scr" id="screen-input" data-section="app">
+
+      <!-- Hero band -->
+      <div class="band band-hero">
+        <div class="input-hero">
+          <div class="input-hero-copy">
+            <h1 class="hero-title" data-i18n="heroTitle">Describe your situation</h1>
+            <p class="hero-sub" data-i18n="heroSub">Tell us in your own words what you are going through — plain language is enough, no forms.</p>
+            <a href="#app" class="hero-cta" data-i18n="heroCta">Try it now</a>
+
+            <ul class="hero-trust-list">
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9.5 12l2 2 3.5-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <span data-i18n="heroTrust1">Only real, verified government schemes — nothing invented</span>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9.5 12l2 2 3.5-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <span data-i18n="heroTrust2">No account, login, or Aadhaar number required</span>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9.5 12l2 2 3.5-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <span data-i18n="heroTrust3">Works in Tamil, Hindi, and English</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="input-card" id="app">
+            <div class="card-seal" aria-hidden="true">த</div>
+            <div class="input-card-label" data-i18n="inputLabel">Write your situation here</div>
+            <div class="input-card-rule"></div>
+            <div class="textarea-wrap">
+              <textarea id="situationInput" rows="6" data-i18n-placeholder="placeholder"></textarea>
+            </div>
+            <div class="chip-label" data-i18n="chipLabel">Tap to fill an example</div>
+            <div class="chips" id="chips"></div>
+            <button class="submit-btn" id="submitBtn" data-i18n="submitBtn">Search schemes</button>
+            <p class="trust-fine" data-i18n="trustFine">Your data stays private and no Aadhaar number is required.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wave transition top -->
+      <div class="blend-divider wave-1"></div>
+
+      <!-- How we verify (Vertical Scroll Flow) band -->
+      <div class="band band-how" id="how-it-works">
+        <div class="band-inner">
+          <div class="verify-header">
+            <span class="section-badge">TRANSPARENT VERIFICATION</span>
+            <h2 class="band-heading" data-i18n="howItWorksHeading">How We Verify Your Eligibility</h2>
+            <p class="band-subtext" data-i18n="verifySubtext">A transparent 4-stage pipeline that converts plain natural language into verified, guaranteed welfare matches.</p>
+          </div>
+
+          <div class="verify-timeline-container">
+            <div class="verify-timeline-track">
+              <div class="verify-timeline-progress" id="timelineProgress"></div>
+            </div>
+            <div class="verify-steps">
+
+              <div class="verify-step-card" data-step="1">
+                <div class="vstep-node"><span class="vstep-num">1</span></div>
+                <div class="vstep-content">
+                  <div class="vstep-tag">STAGE 01</div>
+                  <h3 class="vstep-title" data-i18n="verifyStep1Title">1. Natural Language Analysis</h3>
+                  <p class="vstep-desc" data-i18n="verifyStep1Desc">We analyze your description in plain Tamil, Hindi, or English. Key parameters like occupation, acreage, family income, or disability status are detected automatically — no tedious form dropdowns.</p>
+                  <div class="vstep-badge-row">
+                    <span class="vstep-badge">Tamil · தமிழ்</span>
+                    <span class="vstep-badge">Hindi · हिंदी</span>
+                    <span class="vstep-badge">English</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="verify-step-card" data-step="2">
+                <div class="vstep-node"><span class="vstep-num">2</span></div>
+                <div class="vstep-content">
+                  <div class="vstep-tag">STAGE 02</div>
+                  <h3 class="vstep-title" data-i18n="verifyStep2Title">2. Zero-Hallucination Catalog Matching</h3>
+                  <p class="vstep-desc" data-i18n="verifyStep2Desc">Your situation is cross-referenced against a verified catalog of official government schemes. Eligibility criteria are matched with 100% honesty — no invented rules.</p>
+                  <div class="vstep-badge-row">
+                    <span class="vstep-badge">Strict Gazette Catalog</span>
+                    <span class="vstep-badge">Zero Hallucinations</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="verify-step-card" data-step="3">
+                <div class="vstep-node"><span class="vstep-num">3</span></div>
+                <div class="vstep-content">
+                  <div class="vstep-tag">STAGE 03</div>
+                  <h3 class="vstep-title" data-i18n="verifyStep3Title">3. Transparent Breakdown & Benefit Calculation</h3>
+                  <p class="vstep-desc" data-i18n="verifyStep3Desc">Get a clear breakdown highlighting exact reasons why you qualify, cash/pension amounts, mandatory documents, and official next steps.</p>
+                  <div class="vstep-badge-row">
+                    <span class="vstep-badge">Passbook Amount</span>
+                    <span class="vstep-badge">Required Documents Dossier</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="verify-step-card" data-step="4">
+                <div class="vstep-node"><span class="vstep-num">4</span></div>
+                <div class="vstep-content">
+                  <div class="vstep-tag">STAGE 04</div>
+                  <h3 class="vstep-title" data-i18n="verifyStep4Title">4. Automated Form Auto-Filling</h3>
+                  <p class="vstep-desc" data-i18n="verifyStep4Desc">Extracted details are mapped into official application form fields, ready for instant preview, PDF download, or submission to E-Seva Kendras.</p>
+                  <div class="vstep-badge-row">
+                    <span class="vstep-badge">Instant Mockup Preview</span>
+                    <span class="vstep-badge">E-Seva Ready</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wave transition middle -->
+      <div class="blend-divider wave-2"></div>
+
+      <!-- Interactive Form Assistant section -->
+      <div class="band band-form-assistant" id="form-assistant">
+        <div class="band-inner">
+          <div class="form-assistant-header">
+            <span class="section-badge">SMART PAPERWORK ASSISTANT</span>
+            <h2 class="band-heading" data-i18n="formSectionHeading">Interactive Form Assistant</h2>
+            <p class="band-subtext" data-i18n="formSectionSub">No more complex bureaucracy. See how Thaguthi maps your plain situation text directly into official government application forms.</p>
+          </div>
+
+          <div class="form-assistant-widget">
+            <div class="form-controls-bar">
+              <div class="template-selector">
+                <label for="formTemplateSelect" data-i18n="formSelectLabel">Select Scheme Form Template:</label>
+                <select id="formTemplateSelect" class="form-select">
+                  <option value="pmkisan">PM-Kisan Samman Nidhi Scheme (Agriculture)</option>
+                  <option value="cmchis">CMCHIS Health Insurance Scheme (Medical)</option>
+                  <option value="pension">Indira Gandhi National Old Age Pension (Social Security)</option>
+                </select>
+              </div>
+              <div class="form-action-btns">
+                <button id="btnAutofill" class="btn-autofill" data-i18n="btnAutofill">⚡ Auto-Fill from Situation</button>
+                <button id="btnResetForm" class="btn-reset-form" data-i18n="btnResetForm">↺ Clear Form</button>
+              </div>
+            </div>
+
+            <div class="form-mockup-card">
+              <div class="mockup-header-bar">
+                <div class="mockup-emblem">த</div>
+                <div>
+                  <div class="mockup-gov-tag">GOVERNMENT OF INDIA · OFFICIAL APPLICATION MOCKUP</div>
+                  <h3 id="mockupFormTitle" class="mockup-form-title">Pradhan Mantri Kisan Samman Nidhi Application</h3>
+                </div>
+                <div class="mockup-status-badge" id="mockupStatusBadge">Draft Mode</div>
+              </div>
+
+              <div class="mockup-source-strip">
+                <span class="source-label">Source Context:</span>
+                <span id="mockupSourceText" class="source-text">"நான் ஒரு விவசாயி. 2 ஏக்கர் நிலத்தில் நெல் பயிரிடுகிறேன்."</span>
+              </div>
+
+              <form id="interactiveForm" class="mockup-grid" onsubmit="return false;">
+                <div class="form-group">
+                  <label for="fieldApplicantName">Applicant Name / விண்ணப்பதாரர் பெயர்</label>
+                  <div class="input-with-badge">
+                    <input type="text" id="fieldApplicantName" placeholder="e.g. K. Ramasamy / ராமசாமி" class="mockup-input">
+                    <span class="extracted-chip" data-i18n="fieldExtractedTag">Auto-extracted</span>
+                  </div>
+                </div>
+
+                  <div class="form-group">
+                  <label for="fieldCategory">Occupation / Category</label>
+                  <div class="input-with-badge">
+                    <input type="text" id="fieldCategory" placeholder="e.g. Small & Marginal Farmer" class="mockup-input">
+                    <span class="extracted-chip" data-i18n="fieldExtractedTag">Auto-extracted</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fieldLandIncome" id="labelLandIncome">Land Holding Size / Income</label>
+                  <div class="input-with-badge">
+                    <input type="text" id="fieldLandIncome" placeholder="e.g. 2.0 Acres Paddy Land" class="mockup-input">
+                    <span class="extracted-chip" data-i18n="fieldExtractedTag">Auto-extracted</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fieldDistrict">District & State</label>
+                  <div class="input-with-badge">
+                    <input type="text" id="fieldDistrict" placeholder="e.g. Thanjavur, Tamil Nadu" class="mockup-input">
+                    <span class="extracted-chip" data-i18n="fieldExtractedTag">Auto-extracted</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fieldBenefit">Target Benefit Claimed</label>
+                  <div class="input-with-badge">
+                    <input type="text" id="fieldBenefit" placeholder="₹6,000 / year Income Support" class="mockup-input" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="fieldVerification">Verification Status</label>
+                  <div class="verification-pill" id="verificationPill">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#346739" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    <span>100% Honest Match — Eligible</span>
+                  </div>
+                </div>
+              </form>
+
+              <div class="mockup-footer-bar">
+                <button id="btnDownloadPdf" type="button" class="btn-primary-form" data-i18n="btnDownloadPdf">📄 Download Pre-filled Form (PDF)</button>
+                <button id="btnSubmitSeva" type="button" class="btn-secondary-form" data-i18n="btnSubmitSeva">🚀 Send to E-Seva Kendra</button>
+              </div>
+            </div>
+
+            <div id="formFeedbackModal" class="form-feedback-modal" hidden>
+              <div class="modal-content-inner">
+                <div class="modal-icon">✓</div>
+                <div class="modal-body">
+                  <h4 id="modalTitle">Application Pre-filled & Ready!</h4>
+                  <p id="modalDesc" data-i18n="formSubmittedNotice">Form Ready! Reference ID #THAG-2026-9842 generated.</p>
+                </div>
+                <button id="modalCloseBtn" type="button" class="modal-close-btn">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wave transition bottom -->
+      <div class="blend-divider wave-3"></div>
+
+      <!-- Schemes we cover band -->
+      <div class="band band-schemes" id="schemes-we-cover">
+        <div class="band-inner">
+          <h2 class="band-heading" data-i18n="schemesHeading">Schemes we cover</h2>
+          <p class="band-subtext" data-i18n="schemesSubtext">A sample of the real government schemes we check your situation against</p>
+          <div class="strip-grid" id="schemeStrip"></div>
+          <p class="strip-more" id="stripMore"></p>
+        </div>
+      </div>
+
+      <!-- Why this exists band -->
+      <div class="band band-why" id="why-this-exists">
+        <div class="band-inner">
+          <h2 class="band-heading" data-i18n="whyHeading">Why this exists</h2>
+          <p class="why-body" data-i18n="whyBody1">Millions of families who qualify for real government welfare schemes never apply — not because they're ineligible, but because scheme details are buried in formal English, spread across dozens of departments, and written for officials rather than citizens.</p>
+          <p class="why-body" data-i18n="whyBody2">Thaguthi closes that gap: describe your situation in plain Tamil, Hindi, or English, and get back only real, verified schemes — matched honestly, with no invented eligibility and no dead ends.</p>
+          <div class="why-stats">
+            <div class="why-stat">
+              <div class="why-stat-num" id="whyStatSchemes">0</div>
+              <div class="why-stat-label" data-i18n="whyStat1Label">Real government schemes checked</div>
+            </div>
+            <div class="why-stat">
+              <div class="why-stat-num" id="whyStatLangs">0</div>
+              <div class="why-stat-label" data-i18n="whyStat2Label">Languages supported</div>
+            </div>
+            <div class="why-stat">
+              <div class="why-stat-num">0</div>
+              <div class="why-stat-label" data-i18n="whyStat3Label">Invented eligibility rules</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LOADING SCREEN ============ -->
+    <section class="screen scr" id="screen-loading" hidden>
+      <div class="loading-wrap">
+        <div class="loading-seal" aria-hidden="true">த</div>
+        <div class="loading-card-stack">
+          <div class="loading-card-back"></div>
+          <div class="loading-card-front">
+            <div class="lc-line lc-title"></div>
+            <div class="lc-line"></div>
+            <div class="lc-line" style="width:84%"></div>
+            <div class="lc-line" style="width:72%"></div>
+            <div class="lc-scan"></div>
+          </div>
+        </div>
+        <div class="loading-text">
+          <div class="loading-heading" id="loadingHeading">Reading your situation…</div>
+          <div class="loading-sub" data-i18n="loadingSub">Matching your situation against real welfare schemes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS SCREEN ============ -->
+    <section class="screen scr" id="screen-results" hidden>
+      <div class="results-wrap">
+        <aside class="situation-panel">
+          <div class="sp-label" data-i18n="spLabel">Your situation</div>
+          <div class="sp-text" id="spText"></div>
+          <div class="sp-tags" id="spTags"></div>
+          <button class="sp-edit" id="editBtn" data-i18n="spEdit">✎ Edit situation</button>
+        </aside>
+
+        <section class="schemes-panel">
+          <div class="schemes-head">
+            <div>
+              <div class="schemes-eyebrow" data-i18n="schemesEyebrow">Matched to your situation</div>
+              <div class="schemes-count" id="schemesCount"></div>
+            </div>
+            <button class="replay-btn" id="replayBtn" data-i18n="replayBtn">↻ Replay seal</button>
+          </div>
+
+          <div id="heroCard"></div>
+          <div class="secondary-grid" id="secondaryGrid"></div>
+
+          <div class="back-search">
+            <button class="back-link" id="backBtn" data-i18n="backBtn">← Start a new search</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============ NO MATCH SCREEN ============ -->
+    <section class="screen scr" id="screen-nomatch" hidden>
+      <div class="nomatch-wrap">
+        <div class="nomatch-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9FCB98" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </div>
+        <h1 class="nomatch-title" data-i18n="nomatchTitle">No confirmed match found</h1>
+        <p class="nomatch-body" data-i18n="nomatchBody">Based on what you shared, we cannot confidently say you qualify for any scheme yet. A few more details will help us match you correctly.</p>
+        <div class="nomatch-hint" id="nomatchHint" hidden>
+          <div class="nh-row">
+            <span class="nh-name" id="nhName"></span>
+            <span class="nh-badge" data-i18n="nomatchPossible">Possible</span>
+          </div>
+          <div class="nh-body" id="nhBody"></div>
+        </div>
+        <div class="nomatch-suggest-label" data-i18n="nomatchSuggestLabel">These details would help</div>
+        <div class="nomatch-suggest-grid">
+          <button class="nomatch-suggest-btn" data-fact="age" data-i18n="nomatchAddAge">+ Add your age</button>
+          <button class="nomatch-suggest-btn" data-fact="family" data-i18n="nomatchAddFamily">+ Add family details</button>
+        </div>
+        <button class="nomatch-retry" id="nomatchRetryBtn" data-i18n="nomatchRetry">Add details and search again</button>
+      </div>
+    </section>
+
+    <!-- ============ ERROR SCREEN ============ -->
+    <section class="screen scr" id="screen-error" hidden>
+      <div class="error-wrap">
+        <div class="error-icon">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#8C2F39" stroke-width="2" stroke-linecap="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".4" fill="#8C2F39" stroke="#8C2F39" stroke-width="1.6"/><path d="M10.3 3.9 2.5 18a1.9 1.9 0 0 0 1.7 2.9h15.6A1.9 1.9 0 0 0 21.5 18L13.7 3.9a1.9 1.9 0 0 0-3.4 0Z"/></svg>
+        </div>
+        <div>
+          <h1 class="error-title" data-i18n="errorTitle">Connection failed</h1>
+          <p class="error-body" data-i18n="errorBody">We could not reach the service right now. What you wrote has been saved safely — please try again in a moment.</p>
+        </div>
+        <div class="error-code" id="errorCode">ERR_NETWORK · 503 · Service Unavailable</div>
+        <button class="error-retry" id="errorRetryBtn" data-i18n="errorRetry">Try again</button>
+        <button class="error-home" id="errorHomeBtn" data-i18n="errorHome">Go to start</button>
+      </div>  
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <span id="footerStats"></span>
+      <span data-i18n="footerDisclaimer">Thaguthi is a guidance tool — the final decision rests with the concerned government department.</span>
+      <span class="footer-trust">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#79AE6F" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>
+        <span data-i18n="footerTrust">Your data is protected · Aadhaar not needed</span>
+      </span>
+    </div>
+    <div class="footer-seal" aria-hidden="true">த</div>
+  </footer>
+
+</div>
+
+<script src="schemes.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

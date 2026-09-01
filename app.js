@@ -1,0 +1,867 @@
+"use strict";
+
+/* ============================================================
+   State
+   ============================================================ */
+let currentScreen = "input"; // 'input' | 'loading' | 'results' | 'nomatch' | 'error'
+let chromeLang = "en";       // UI chrome only — independent of query/response language
+let lastSituationText = "";
+let lastMatchResult = null;  // { detectedLang, hero, secondary, hint }
+
+const els = {};
+document.querySelectorAll("[id]").forEach((el) => { els[el.id] = el; });
+
+/* ============================================================
+   Language detection for the user's typed situation
+   (separate concern from the chrome toggle — see i18n.js)
+   ============================================================ */
+function detectLang(text) {
+  if (/[஀-௿]/.test(text)) return "ta";
+  if (/[ऀ-ॿ]/.test(text)) return "hi";
+  return "en";
+}
+
+/* ============================================================
+   Local zero-hallucination matcher (fallback / offline path)
+   Only ever returns schemes from the hardcoded SCHEMES catalogue.
+   ============================================================ */
+function localMatchSchemes(text) {
+  const lower = text.toLowerCase();
+  const scored = SCHEMES.map((s) => {
+    let score = 0;
+    for (const kw of s.keywords) {
+      if (lower.includes(kw.toLowerCase())) score++;
+    }
+    return { scheme: s, score };
+  }).filter((r) => r.score > 0);
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored;
+}
+
+function buildResultFromLocalMatch(text) {
+  const lang = detectLang(text);
+  const scored = localMatchSchemes(text);
+
+  // No keyword signal at all — genuinely nothing to go on.
+  if (scored.length === 0) {
+    return { detectedLang: lang, hero: null, secondary: [], hint: null };
+  }
+
+  const hero = scored[0];
+  const secondary = scored.slice(1, 3).map((r) => ({ scheme: r.scheme, uncertain: r.score < hero.score }));
+  return { detectedLang: lang, hero: hero.scheme, secondary, hint: null };
+}
+
+/* ============================================================
+   Backend call with graceful fallback
+   404 / no route  -> silently fall back to local matcher (static hosting)
+   5xx / network error while online -> real error screen
+   ============================================================ */
+async function matchSchemes(text) {
+  if (navigator.onLine) {
+    try {
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), 7000);
+      const res = await fetch("/api/match-schemes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+        signal: controller.signal,
+      });
+      clearTimeout(t);
+
+      if (res.ok) {
+        const data = await res.json();
+        return normalizeApiResult(data);
+      }
+      if (res.status >= 500) {
+        throw new Error("backend_error_" + res.status);
+      }
+      // 404 or similar: no backend deployed here — fall back quietly
+    } catch (err) {
+      if (err && err.name !== "AbortError" && String(err.message || "").startsWith("backend_error_")) {
+        throw err;
+      }
+      if (err && err.name === "TypeError") {
+        // fetch couldn't even reach a route — no backend present, fall back quietly
+      } else if (err && err.name === "AbortError") {
+        throw new Error("timeout");
+      } else if (err && String(err.message || "").startsWith("backend_error_")) {
+        throw err;
+      }
+    }
+  }
+  return buildResultFromLocalMatch(text);
+}
+
+function normalizeApiResult(data) {
+  // Expected shape from /api/match-schemes: { detectedLang, heroId, secondaryIds:[], hintId }
+  const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
+  return {
+    detectedLang: data.detectedLang || "en",
+    hero: data.heroId ? byId[data.heroId] || null : null,
+    secondary: (data.secondaryIds || []).map((id) => ({ scheme: byId[id], uncertain: !!data.uncertain }) ).filter((r) => r.scheme),
+    hint: data.hintId ? byId[data.hintId] || null : null,
+  };
+}
+
+/* ============================================================
+   i18n chrome helpers
+   ============================================================ */
+function t(key) {
+  const v = I18N[chromeLang][key];
+  return typeof v === "function" ? v : v;
+}
+function applyChromeI18n() {
+  document.documentElement.lang = chromeLang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const v = I18N[chromeLang][key];
+    if (typeof v === "string") el.textContent = v;
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    el.placeholder = I18N[chromeLang][key];
+  });
+  els.langBtnLabel.textContent = I18N[chromeLang].langLabels[chromeLang];
+  els.langBtnLabel.className = chromeLang === "ta" ? "tamil" : chromeLang === "hi" ? "deva" : "";
+  document.querySelectorAll(".lang-row").forEach((row) => {
+    const l = row.getAttribute("data-lang");
+    row.classList.toggle("active", l === chromeLang);
+    row.querySelector("[data-check]").classList.toggle("show", l === chromeLang);
+  });
+  renderChips();
+  renderSchemeStrip();
+  renderStripMore();
+  renderFooterStats();
+  renderWhyStats();
+  if (currentScreen === "results" && lastMatchResult) renderResults(lastMatchResult);
+  if (currentScreen === "nomatch" && lastMatchResult) renderNomatch(lastMatchResult);
+}
+
+function setChromeLang(l) {
+  chromeLang = l;
+  els.langMenu.hidden = true;
+  els.langBtn.setAttribute("aria-expanded", "false");
+  applyChromeI18n();
+}
+
+/* ============================================================
+   Example chips — always keep a Tamil and a Hindi example present,
+   whatever the chrome language is set to.
+   ============================================================ */
+const CHIP_EXAMPLES = [
+  { text: "நான் ஒரு விவசாயி. 2 ஏக்கர் நிலத்தில் நெல் பயிரிடுகிறேன். இந்த ஆண்டு மழையின்றி பயிர் பாதிக்கப்பட்டது. ", cls: "tamil" },
+  { text: "मेरे पति का निधन हो गया और मेरे पास कोई नियमित आय नहीं है। ", cls: "deva" },
+  { text: "எனக்கு 62 வயது, தனியாக வசிக்கிறேன், நிலையான வருமானம் இல்லை. ", cls: "tamil" },
+  { text: "मेरे घर में गैस कनेक्शन नहीं है, हम लकड़ी से खाना बनाते हैं। ", cls: "deva" },
+];
+function renderChips() {
+  els.chips.innerHTML = "";
+  CHIP_EXAMPLES.forEach((c) => {
+    const b = document.createElement("button");
+    b.className = "chip " + c.cls;
+    b.textContent = c.text.trim();
+    b.addEventListener("click", () => {
+      els.situationInput.value = c.text;
+      els.situationInput.focus();
+    });
+    els.chips.appendChild(b);
+  });
+}
+
+/* ============================================================
+   Input screen — browsable scheme strip (a taste of the catalogue,
+   visible before typing) and footer stats. Both chrome-translated.
+   ============================================================ */
+const STRIP_SCHEME_IDS = ["pm-kisan", "mgnrega", "cmchis", "old-age-pension", "pmay-g", "post-matric-scholarship"];
+const SCHEME_BLURBS = {
+  "pm-kisan": {
+    en: "₹6,000/year direct income support for landholding farmers",
+    ta: "நிலம் வைத்திருக்கும் விவசாயிகளுக்கு ஆண்டுக்கு ₹6,000 நேரடி உதவி",
+    hi: "ज़मीन वाले किसानों को साल में ₹6,000 की सीधी सहायता",
+  },
+  "mgnrega": {
+    en: "100 days of guaranteed rural work every year",
+    ta: "ஆண்டுக்கு 100 நாட்கள் உறுதியான கிராமப்புற வேலை",
+    hi: "हर साल 100 दिन का गारंटीशुदा ग्रामीण काम",
+  },
+  "cmchis": {
+    en: "Cashless hospital treatment up to ₹5 lakh / family / year",
+    ta: "குடும்பத்திற்கு ஆண்டுக்கு ₹5 லட்சம் வரை பணமில்லாச் சிகிச்சை",
+    hi: "परिवार को साल में ₹5 लाख तक कैशलेस इलाज",
+  },
+  "old-age-pension": {
+    en: "Monthly pension for citizens aged 60 and above",
+    ta: "60 வயது மற்றும் அதற்கு மேற்பட்டோருக்கு மாதாந்திர ஓய்வூதியம்",
+    hi: "60 वर्ष और उससे अधिक उम्र वालों के लिए मासिक पेंशन",
+  },
+  "pmay-g": {
+    en: "Financial help to build a pucca house in rural areas",
+    ta: "கிராமப்புறங்களில் பக்கா வீடு கட்ட நிதி உதவி",
+    hi: "ग्रामीण क्षेत्रों में पक्का मकान बनाने के लिए आर्थिक सहायता",
+  },
+  "post-matric-scholarship": {
+    en: "Tuition and course costs covered for SC/ST students",
+    ta: "SC/ST மாணவர்களுக்கு கல்விக் கட்டணம் மற்றும் படிப்புச் செலவு",
+    hi: "SC/ST छात्रों के लिए ट्यूशन और पाठ्यक्रम खर्च कवर",
+  },
+};
+
+function renderSchemeStrip() {
+  const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
+  els.schemeStrip.innerHTML = STRIP_SCHEME_IDS.map((id) => {
+    const scheme = byId[id];
+    const blurb = SCHEME_BLURBS[id][chromeLang] || SCHEME_BLURBS[id].en;
+    const catMeta = CATEGORY_META[scheme.category];
+    const catLabel = catMeta ? (catMeta[chromeLang] || catMeta.en) : scheme.category;
+    return `
+      <div class="strip-card">
+        <div class="strip-card-head">${SHIELD_ICON}<span class="strip-card-cat">${escapeHtml(catLabel)}</span></div>
+        <div class="strip-card-name">${escapeHtml(scheme.name)}</div>
+        <div class="strip-card-blurb" lang="${chromeLang}">${escapeHtml(blurb)}</div>
+      </div>`;
+  }).join("");
+}
+
+function renderFooterStats() {
+  els.footerStats.textContent = I18N[chromeLang].footerStats(SCHEMES.length, Object.keys(I18N).length);
+}
+
+function renderWhyStats() {
+  if (els.whyStatSchemes) els.whyStatSchemes.textContent = SCHEMES.length;
+  if (els.whyStatLangs) els.whyStatLangs.textContent = Object.keys(I18N).length;
+}
+
+function renderStripMore() {
+  const more = SCHEMES.length - STRIP_SCHEME_IDS.length;
+  els.stripMore.textContent = more > 0 ? I18N[chromeLang].stripMore(more) : "";
+}
+
+/* ============================================================
+   Screen switching
+   ============================================================ */
+function showScreen(name) {
+  currentScreen = name;
+  ["input", "loading", "results", "nomatch", "error"].forEach((s) => {
+    els["screen-" + s].hidden = s !== name;
+  });
+  window.scrollTo(0, 0);
+  if (name === "results") fireSeal();
+  if (name === "loading") startLoadingMsgs(); else stopLoadingMsgs();
+}
+
+/* ============================================================
+   Loading screen — rotating micro-copy (chrome-translated),
+   distinct from a generic spinner.
+   ============================================================ */
+let loadingMsgTimer = null;
+function startLoadingMsgs() {
+  let i = 0;
+  const advance = () => {
+    const msgs = I18N[chromeLang].loadingMsgs;
+    els.loadingHeading.textContent = msgs[i % msgs.length];
+    i++;
+  };
+  advance();
+  loadingMsgTimer = setInterval(advance, 1200);
+}
+function stopLoadingMsgs() {
+  if (loadingMsgTimer) {
+    clearInterval(loadingMsgTimer);
+    loadingMsgTimer = null;
+  }
+}
+
+function fireSeal() {
+  const seal = document.getElementById("resultSeal");
+  if (!seal) return;
+  seal.classList.remove("on");
+  requestAnimationFrame(() => requestAnimationFrame(() => seal.classList.add("on")));
+}
+
+/* ============================================================
+   Results rendering
+   ============================================================ */
+function factTags(text, lang) {
+  const tags = [];
+  const has = (arr) => arr.some((k) => text.toLowerCase().includes(k.toLowerCase()));
+  const push = (kEn, kTa, kHi, v) => {
+    const label = lang === "ta" ? kTa : lang === "hi" ? kHi : kEn;
+    tags.push({ k: label, v });
+  };
+  if (has(["farmer","விவசாயி","किसान","acre","ஏக்கர்","एकड़"])) {
+    push("Occupation","தொழில்","पेशा", lang === "ta" ? "விவசாயம்" : lang === "hi" ? "खेती" : "Farming");
+  }
+  if (has(["crop fail","drought","பயிர் இழப்பு","வறட்சி","फसल खराब","सूखा"])) {
+    push("Situation","நிலைமை","स्थिति", lang === "ta" ? "வறட்சி · பயிர் இழப்பு" : lang === "hi" ? "सूखा · फसल नुकसान" : "Drought · crop loss");
+  }
+  if (has(["widow","விதவை","विधवा"])) {
+    push("Situation","நிலைமை","स्थिति", lang === "ta" ? "விதவை" : lang === "hi" ? "विधवा" : "Widowed");
+  }
+  if (has(["disab","மாற்றுத்திறன","विकलांग","दिव्यांग"])) {
+    push("Situation","நிலைமை","स्थिति", lang === "ta" ? "மாற்றுத்திறனாளி" : lang === "hi" ? "दिव्यांग" : "Disability");
+  }
+  return tags;
+}
+
+function renderResults(result) {
+  const lang = result.detectedLang;
+  els.spText.textContent = lastSituationText;
+  els.spText.setAttribute("lang", lang);
+
+  els.spTags.innerHTML = "";
+  factTags(lastSituationText, lang).forEach((tag) => {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<div class="sp-tag-k">${tag.k}</div><div class="sp-tag-v" lang="${lang}">${escapeHtml(tag.v)}</div>`;
+    els.spTags.appendChild(wrap);
+  });
+
+  const total = 1 + result.secondary.length;
+  els.schemesCount.textContent = I18N[chromeLang].schemesCount(total);
+
+  els.heroCard.innerHTML = heroCardHtml(result.hero, lang);
+  els.secondaryGrid.innerHTML = result.secondary.map((r, i) => secondaryCardHtml(r, lang, i)).join("");
+}
+
+function heroCardHtml(scheme, lang) {
+  const reason = scheme.reasons[lang] ? scheme.reasons[lang]() : scheme.reasons.en();
+  const reasonHtml = highlightReason(reason, scheme, lastSituationText);
+  const amountHtml = scheme.amount
+    ? `<span class="hero-amount">${escapeHtml(scheme.amount.value)}<span class="hero-amount-period" lang="${lang}"> ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</span></span>`
+    : "";
+
+  return `
+    <div class="rowin hero-card">
+      <div class="seal" id="resultSeal" title="Replay stamp">
+        <svg viewBox="0 0 100 100">
+          <defs><path id="ptop" d="M20,54 A34,34 0 0 1 80,54"/><path id="pbot" d="M22,52 A32,32 0 0 0 78,52"/></defs>
+          <circle cx="50" cy="50" r="41" fill="rgba(201,162,39,.06)" stroke="#C9A227" stroke-width="2.5"/>
+          <circle cx="50" cy="50" r="33" fill="none" stroke="#C9A227" stroke-width="1" stroke-dasharray="1.5 3"/>
+          <text font-family="Libre Franklin" font-size="8.5" font-weight="700" letter-spacing="2.5" fill="#C9A227"><textPath href="#ptop" startOffset="50%" text-anchor="middle">${I18N[chromeLang].eligibleRibbonTop}</textPath></text>
+          <text font-family="Noto Sans Tamil" font-size="9.5" font-weight="600" fill="#C9A227"><textPath href="#pbot" startOffset="50%" text-anchor="middle">${escapeHtml(I18N[chromeLang].eligibleRibbonBottom)}</textPath></text>
+          <path d="M38 51 l8 8 l16 -18" fill="none" stroke="#C9A227" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      ${categoryTagHtml(scheme, lang)}
+      <div class="hero-agency" lang="${lang}">${escapeHtml(scheme.agency[lang] || scheme.agency.en)}</div>
+      <div class="hero-name-row">
+        <span class="hero-name">${escapeHtml(scheme.name)}</span>
+        ${amountHtml}
+      </div>
+      <div class="dossier-label" style="margin-top:12px">${escapeHtml(I18N[chromeLang].whyQualify)}</div>
+      <p class="hero-reason" lang="${lang}">${reasonHtml}</p>
+      ${whatYouGetHtml(scheme, lang)}
+      ${dossierHtml(scheme, lang)}
+    </div>`;
+}
+
+function secondaryCardHtml(r, lang, i) {
+  const scheme = r.scheme;
+  const reason = scheme.reasons[lang] ? scheme.reasons[lang]() : scheme.reasons.en();
+  const reasonHtml = highlightReason(reason, scheme, lastSituationText);
+  const amount = scheme.amount ? `<div class="sc-amount">${escapeHtml(scheme.amount.value)} ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</div>` : "";
+  const badge = r.uncertain ? `<span class="sc-badge">${escapeHtml(I18N[chromeLang].verifyBadge)}</span>` : "";
+  return `
+    <div class="rowin secondary-card" style="animation-delay:${(i + 1) * 0.09}s">
+      ${categoryTagHtml(scheme, lang)}
+      <div class="sc-head">
+        <span class="sc-agency" lang="${lang}">${escapeHtml(scheme.agency[lang] || scheme.agency.en)}</span>
+        ${badge}
+      </div>
+      <div class="sc-name">${escapeHtml(scheme.name)}</div>
+      ${amount}
+      <div class="sc-body" lang="${lang}">${reasonHtml}</div>
+      ${dossierHtml(scheme, lang)}
+    </div>`;
+}
+
+function renderNomatch(result) {
+  if (result.hint) {
+    const lang = result.detectedLang;
+    els.nhName.textContent = result.hint.name;
+    els.nhBody.textContent = result.hint.reasons[lang] ? result.hint.reasons[lang]() : result.hint.reasons.en();
+    els.nhBody.setAttribute("lang", lang);
+    els.nomatchHint.hidden = false;
+  } else {
+    els.nomatchHint.hidden = true;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+/* ============================================================
+   "Why you qualify" — mark the 1-2 matched keywords from the
+   user's own text wherever they literally occur in the fixed,
+   hardcoded reasoning paragraph (never invents new wording).
+   ============================================================ */
+function highlightReason(reasonText, scheme, userText) {
+  const lowerUser = (userText || "").toLowerCase();
+  const hits = scheme.keywords.filter((kw) => kw.length > 2 && lowerUser.includes(kw.toLowerCase()));
+  const unique = [...new Set(hits)].sort((a, b) => b.length - a.length).slice(0, 2);
+  let html = escapeHtml(reasonText);
+  unique.forEach((kw) => {
+    const esc = escapeHtml(kw).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(esc, "i");
+    html = html.replace(re, (m) => `<mark class="match-mark">${m}</mark>`);
+  });
+  return html;
+}
+
+const SHIELD_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>';
+const CHECK_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9.5 12l2 2 3.5-4"/><circle cx="12" cy="12" r="9"/></svg>';
+const ARROW_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+function categoryTagHtml(scheme, lang) {
+  const meta = CATEGORY_META[scheme.category];
+  const label = meta ? (meta[lang] || meta.en) : scheme.category;
+  return `<div class="category-tag">${SHIELD_ICON}<span>${escapeHtml(label)}</span></div>`;
+}
+
+function whatYouGetHtml(scheme, lang) {
+  if (scheme.amount) {
+    return `
+      <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatYouGet)}</div>
+      <div class="passbook">
+        <div class="passbook-row head"><span>SCHEME</span><span>AMOUNT</span></div>
+        <div class="passbook-row"><span>${escapeHtml(scheme.name)}</span><span>${escapeHtml(scheme.amount.value)} ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</span></div>
+      </div>`;
+  }
+  if (scheme.benefit) {
+    const text = scheme.benefit[lang] || scheme.benefit.en;
+    return `<div class="benefit-line">${CHECK_ICON}<span lang="${lang}">${escapeHtml(text)}</span></div>`;
+  }
+  return "";
+}
+
+function dossierHtml(scheme, lang) {
+  const docs = (scheme.apply && (scheme.apply[lang] || scheme.apply.en)) || [];
+  const next = scheme.nextStep ? (scheme.nextStep[lang] || scheme.nextStep.en) : "";
+  return `
+    <div class="dossier">
+      <div>
+        <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatsNeeded)}</div>
+        <ul class="dossier-list" lang="${lang}">${docs.map((d) => `<li>${escapeHtml(d)}</li>`).join("")}</ul>
+      </div>
+      <div>
+        <div class="dossier-label">${escapeHtml(I18N[chromeLang].nextStepLabel)}</div>
+        <div class="dossier-next" lang="${lang}">${ARROW_ICON}<span>${escapeHtml(next)}</span></div>
+      </div>
+    </div>`;
+}
+
+/* ============================================================
+   Search flow
+   ============================================================ */
+let loadingStarted = 0;
+async function runSearch() {
+  const text = els.situationInput.value.trim();
+  if (!text) { els.situationInput.focus(); return; }
+  lastSituationText = text;
+
+  loadingStarted = Date.now();
+  showScreen("loading");
+
+  try {
+    const result = await matchSchemes(text);
+    lastMatchResult = result;
+    const elapsed = Date.now() - loadingStarted;
+    const wait = Math.max(0, 900 - elapsed); // avoid a screen flash on instant local matches
+    setTimeout(() => {
+      if (!result.hero) {
+        showScreen("nomatch");
+        renderNomatch(result);
+      } else {
+        showScreen("results");
+        renderResults(result);
+      }
+    }, wait);
+  } catch (err) {
+    const elapsed = Date.now() - loadingStarted;
+    const wait = Math.max(0, 900 - elapsed);
+    setTimeout(() => showScreen("error"), wait);
+  }
+}
+
+function resetToInput(opts) {
+  const clear = !!(opts && opts.clear);
+  if (clear) els.situationInput.value = "";
+  showScreen("input");
+  if (!clear) {
+    els.situationInput.focus();
+    const end = els.situationInput.value.length;
+    els.situationInput.setSelectionRange(end, end);
+  }
+}
+
+function setupStickyNav() {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+  const toggleHeaderState = () => {
+    header.classList.toggle("is-scrolled", window.scrollY > 24);
+  };
+  toggleHeaderState();
+  window.addEventListener("scroll", toggleHeaderState, { passive: true });
+}
+
+function setupRevealAnimations() {
+  const targets = document.querySelectorAll(".hiw-step-lg, .strip-card, .why-body");
+  targets.forEach((el, idx) => {
+    el.classList.add("reveal");
+    el.style.transitionDelay = `${idx * 120}ms`;
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.18 });
+
+  targets.forEach((el) => observer.observe(el));
+}
+
+function setupCountUp() {
+  const nodes = document.querySelectorAll(".why-stat-num");
+  nodes.forEach((el) => {
+    const target = parseInt(el.textContent, 10);
+    if (Number.isNaN(target)) return;
+    el.dataset.countTarget = String(target);
+    el.textContent = "0";
+  });
+
+  const DURATION = 900;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      const el = entry.target;
+      const target = Number(el.dataset.countTarget || 0);
+      if (target <= 0) { el.textContent = "0"; return; }
+      const start = performance.now();
+      const tick = (now) => {
+        const progress = Math.min((now - start) / DURATION, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = String(Math.round(eased * target));
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = String(target);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.4 });
+
+  nodes.forEach((el) => observer.observe(el));
+}
+
+/* ============================================================
+   Wire up events
+   ============================================================ */
+els.brandReset.addEventListener("click", (e) => { e.preventDefault(); resetToInput({ clear: true }); });
+els.submitBtn.addEventListener("click", runSearch);
+els.situationInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) runSearch();
+});
+// "Edit situation" — take the user back to their own text to revise, not a blank form.
+els.editBtn.addEventListener("click", () => resetToInput({ clear: false }));
+// Results "Search again" — a fresh search starts from a blank slate.
+els.backBtn.addEventListener("click", () => resetToInput({ clear: true }));
+els.replayBtn.addEventListener("click", fireSeal);
+// The seal graphic itself is tappable to replay, not just the "Replay seal" button —
+// event delegation because #resultSeal is recreated on every heroCard render.
+els.heroCard.addEventListener("click", (e) => { if (e.target.closest("#resultSeal")) fireSeal(); });
+// No-match "Add details and search again" — keep what they wrote so they can extend it, not retype.
+els.nomatchRetryBtn.addEventListener("click", () => resetToInput({ clear: false }));
+els.errorRetryBtn.addEventListener("click", runSearch);
+els.errorHomeBtn.addEventListener("click", () => resetToInput({ clear: true }));
+
+document.querySelectorAll(".nomatch-suggest-btn").forEach((b) => b.addEventListener("click", () => resetToInput({ clear: false })));
+
+els.langBtn.addEventListener("click", () => {
+  const open = els.langMenu.hidden;
+  els.langMenu.hidden = !open;
+  els.langBtn.setAttribute("aria-expanded", String(open));
+});
+document.querySelectorAll(".lang-row").forEach((row) => {
+  row.addEventListener("click", () => setChromeLang(row.getAttribute("data-lang")));
+});
+document.addEventListener("click", (e) => {
+  if (!els.langMenu.hidden && !e.target.closest(".lang-switch")) {
+    els.langMenu.hidden = true;
+    els.langBtn.setAttribute("aria-expanded", "false");
+  }
+});
+
+// Sticky nav — mobile hamburger toggle
+els.navToggle.addEventListener("click", () => {
+  const open = !els.siteNav.classList.contains("open");
+  els.siteNav.classList.toggle("open", open);
+  els.navToggle.setAttribute("aria-expanded", String(open));
+});
+document.addEventListener("click", (e) => {
+  if (els.siteNav.classList.contains("open") && !e.target.closest(".header-right")) {
+    els.siteNav.classList.remove("open");
+    els.navToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+// Nav anchor links — the sections they point to only exist on the input
+// screen, so jump there first (without disturbing any typed text) before
+// smooth-scrolling to the target.
+document.querySelectorAll(".nav-link").forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute("href").slice(1);
+    els.siteNav.classList.remove("open");
+    els.navToggle.setAttribute("aria-expanded", "false");
+    const scrollToTarget = () => {
+      const target = document.getElementById(targetId);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    if (currentScreen !== "input") {
+      showScreen("input");
+      requestAnimationFrame(() => requestAnimationFrame(scrollToTarget));
+    } else {
+      scrollToTarget();
+    }
+  });
+});
+
+/* ============================================================
+   Dev-only QA entry points (not linked from the UI):
+   ?demo=input|loading|results|nomatch|error
+   ============================================================ */
+(function initDemoParam() {
+  const p = new URLSearchParams(location.search).get("demo");
+  const mockText = "நான் ஒரு விவசாயி. 2 ஏக்கர் நிலத்தில் நெல் பயிரிடுகிறேன். இந்த ஆண்டு மழையின்றி பயிர் பாதிக்கப்பட்டு, வேறு எந்த வருமானமும் இல்லை. கடந்த மாதம் என் மகனுக்கு மருத்துவமனையில் அறுவை சிகிச்சை தேவைப்பட்டது, அதற்கான செலவும் பெரிதாக இருந்தது.";
+  if (p === "results") {
+    lastSituationText = mockText;
+    const r = buildResultFromLocalMatch(mockText);
+    lastMatchResult = r;
+    showScreen("results");
+    renderResults(r);
+  } else if (p === "nomatch") {
+    lastSituationText = "எனக்கு உதவி தேவை.";
+    const r = { detectedLang: "ta", hero: null, secondary: [], hint: SCHEMES.find((s) => s.id === "mgnrega") };
+    lastMatchResult = r;
+    showScreen("nomatch");
+    renderNomatch(r);
+  } else if (p === "error") {
+    showScreen("error");
+  } else if (p === "loading") {
+    showScreen("loading");
+  }
+})();
+
+/* ============================================================
+   Scroll-driven Vertical Timeline Flow for "How We Verify"
+   ============================================================ */
+function setupScrollTimeline() {
+  const timelineContainer = document.querySelector(".verify-timeline-container");
+  const timelineProgress = document.getElementById("timelineProgress");
+  const stepCards = document.querySelectorAll(".verify-step-card");
+  if (!timelineContainer || !timelineProgress) return;
+
+  function updateTimeline() {
+    const rect = timelineContainer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    // Calculate percentage of timeline scrolled through viewport
+    const totalHeight = rect.height;
+    const currentPos = windowHeight * 0.6 - rect.top;
+    let progress = (currentPos / totalHeight) * 100;
+    progress = Math.max(0, Math.min(100, progress));
+    
+    timelineProgress.style.height = `${progress}%`;
+
+    stepCards.forEach((card) => {
+      const cardRect = card.getBoundingClientRect();
+      if (cardRect.top < windowHeight * 0.75 && cardRect.bottom > windowHeight * 0.25) {
+        card.classList.add("active");
+      } else {
+        card.classList.remove("active");
+      }
+    });
+  }
+
+  window.addEventListener("scroll", updateTimeline, { passive: true });
+  updateTimeline();
+}
+
+/* ============================================================
+   Interactive Form Assistant Mockup
+   ============================================================ */
+const FORM_TEMPLATES = {
+  pmkisan: {
+    title: "Pradhan Mantri Kisan Samman Nidhi Application",
+    landLabel: "Land Holding Size",
+    sourceText: '"நான் ஒரு விவசாயி. 2 ஏக்கர் நிலத்தில் நெல் பயிரிடுகிறேன்."',
+    applicant: "K. Ramasamy / ராமசாமி",
+    category: "Small & Marginal Farmer",
+    landIncome: "2.0 Acres Paddy Land",
+    district: "Thanjavur, Tamil Nadu",
+    benefit: "₹6,000 / year Direct Income Support",
+  },
+  cmchis: {
+    title: "CM Comprehensive Health Insurance Scheme Application",
+    landLabel: "Annual Household Income",
+    sourceText: '"கடந்த மாதம் அறுவை சிகிச்சை தேவைப்பட்டது, செலவு பெரிதாக இருந்தது."',
+    applicant: "S. Meenakshi / மீனாட்சி",
+    category: "Low Income Family / BPL",
+    landIncome: "Below ₹1,20,000 / year",
+    district: "Madurai, Tamil Nadu",
+    benefit: "Cashless Treatment up to ₹5 Lakh / Year",
+  },
+  pension: {
+    title: "Indira Gandhi National Old Age Pension Application",
+    landLabel: "Applicant Age & Financial Status",
+    sourceText: '"எனக்கு 62 வயது, தனியாக வசிக்கிறேன், நிலையான வருமானம் இல்லை."',
+    applicant: "M. Karuppan / கருப்பன்",
+    category: "Senior Citizen (60+ Years)",
+    landIncome: "62 Years / No Fixed Income",
+    district: "Salem, Tamil Nadu",
+    benefit: "₹1,000 / month Direct Pension",
+  },
+};
+
+function setupFormAssistant() {
+  const select = document.getElementById("formTemplateSelect");
+  const btnAutofill = document.getElementById("btnAutofill");
+  const btnReset = document.getElementById("btnResetForm");
+  const btnDownloadPdf = document.getElementById("btnDownloadPdf");
+  const btnSubmitSeva = document.getElementById("btnSubmitSeva");
+  const modal = document.getElementById("formFeedbackModal");
+  const modalClose = document.getElementById("modalCloseBtn");
+  
+  if (!select) return;
+
+  function loadTemplate(key, triggerAutofill = true) {
+    const tpl = FORM_TEMPLATES[key] || FORM_TEMPLATES.pmkisan;
+    if (els.mockupFormTitle) els.mockupFormTitle.textContent = tpl.title;
+    if (els.mockupSourceText) els.mockupSourceText.textContent = tpl.sourceText;
+    if (els.labelLandIncome) els.labelLandIncome.textContent = tpl.landLabel;
+    if (els.fieldBenefit) els.fieldBenefit.value = tpl.benefit;
+    
+    if (triggerAutofill) {
+      runFormAutofill(tpl);
+    } else {
+      clearFormFields();
+    }
+  }
+
+  function clearFormFields() {
+    if (els.fieldApplicantName) els.fieldApplicantName.value = "";
+    if (els.fieldCategory) els.fieldCategory.value = "";
+    if (els.fieldLandIncome) els.fieldLandIncome.value = "";
+    if (els.fieldDistrict) els.fieldDistrict.value = "";
+    if (els.mockupStatusBadge) {
+      els.mockupStatusBadge.textContent = "Draft Mode";
+      els.mockupStatusBadge.style.borderColor = "var(--seal-gold)";
+      els.mockupStatusBadge.style.color = "var(--seal-gold)";
+    }
+    document.querySelectorAll(".extracted-chip").forEach((chip) => chip.classList.remove("show"));
+  }
+
+  function runFormAutofill(tpl) {
+    clearFormFields();
+    
+    const fields = [
+      { el: els.fieldApplicantName, val: tpl.applicant },
+      { el: els.fieldCategory, val: tpl.category },
+      { el: els.fieldLandIncome, val: tpl.landIncome },
+      { el: els.fieldDistrict, val: tpl.district },
+    ];
+
+    fields.forEach((f, idx) => {
+      if (!f.el) return;
+      setTimeout(() => {
+        f.el.value = f.val;
+        f.el.classList.add("autofilled");
+        const chip = f.el.parentElement ? f.el.parentElement.querySelector(".extracted-chip") : null;
+        if (chip) chip.classList.add("show");
+        setTimeout(() => f.el.classList.remove("autofilled"), 1200);
+      }, idx * 250);
+    });
+
+    setTimeout(() => {
+      if (els.mockupStatusBadge) {
+        els.mockupStatusBadge.textContent = "100% Pre-filled";
+        els.mockupStatusBadge.style.borderColor = "var(--text-primary)";
+        els.mockupStatusBadge.style.color = "var(--text-primary)";
+      }
+    }, fields.length * 250 + 100);
+  }
+
+  select.addEventListener("change", (e) => loadTemplate(e.target.value, true));
+  if (btnAutofill) btnAutofill.addEventListener("click", () => loadTemplate(select.value, true));
+  if (btnReset) btnReset.addEventListener("click", clearFormFields);
+
+  function openModal(title, desc) {
+    if (title && els.modalTitle) els.modalTitle.textContent = title;
+    if (desc && els.modalDesc) els.modalDesc.textContent = desc;
+    if (modal) modal.hidden = false;
+  }
+
+  function closeModal() {
+    if (modal) modal.hidden = true;
+  }
+
+  if (btnDownloadPdf) {
+    btnDownloadPdf.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal("PDF Download Complete", "Official application form PDF for " + (FORM_TEMPLATES[select.value]?.title || "Scheme") + " downloaded with reference #THAG-2026-9842.");
+    });
+  }
+
+  if (btnSubmitSeva) {
+    btnSubmitSeva.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal("Sent to E-Seva Kendra!", "Your pre-filled application dossier has been submitted to your local District E-Seva Kendra under Reference #THAG-2026-9842.");
+    });
+  }
+
+  if (modalClose) {
+    modalClose.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeModal();
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        e.preventDefault();
+        closeModal();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal && !modal.hidden) closeModal();
+  });
+
+  // Initial load
+  loadTemplate("pmkisan", true);
+}
+
+/* ============================================================
+   Init
+   ============================================================ */
+setupStickyNav();
+setupRevealAnimations();
+setupScrollTimeline();
+setupFormAssistant();
+applyChromeI18n();
+setupCountUp();
+if (currentScreen === "input") showScreen("input");
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}

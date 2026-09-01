@@ -1,0 +1,9 @@
+{
+  "name": "thaguthi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thaguthi (தகுதி) — welfare scheme eligibility assistant",
+  "scripts": {
+    "dev": "npx serve . -l 5050"
+  }
+}
