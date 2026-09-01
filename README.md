@@ -121,10 +121,12 @@ This file contains the visual system for the product. It defines:
 
 ```bash
 npm install   # first time only — installs the vercel CLI as a devDependency
-npm run dev
+npm run local
 ```
 
-`npm run dev` runs `vercel dev`, which emulates the real Vercel deployment locally: it serves the static frontend **and** actually executes `api/match-schemes.js` (the previous `npx serve`-based setup only did the former — `/api/*` routes silently 404'd under it, which made every search fall back to the much weaker local offline matcher). `vercel dev` reads `GEMINI_API_KEY` from `.env` automatically, no extra flags needed. Opens on `http://localhost:5050`.
+`npm run local` runs `vercel dev`, which emulates the real Vercel deployment locally: it serves the static frontend **and** actually executes `api/match-schemes.js` (a plain `npx serve`-based static server only does the former — `/api/*` routes silently 404 under that, which makes every search fall back to the much weaker local offline matcher). `vercel dev` reads `GEMINI_API_KEY` from `.env` automatically, no extra flags needed. Opens on `http://localhost:5050`.
+
+The script is deliberately **not** named `dev` — the Vercel CLI refuses to start (`must not recursively invoke itself`) if `package.json`'s `dev` script is itself a `vercel dev` command, since some frameworks use that script as `vercel dev`'s own internal dev-server hook. `local` sidesteps that guard.
 
 The first time you run it in a fresh environment, it will prompt to log in to Vercel and link the project (already linked to the `thaguthi` project in this repo's case).
 

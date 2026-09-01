@@ -4,7 +4,7 @@
   "private": true,
   "description": "Thaguthi (தகுதி) — welfare scheme eligibility assistant",
   "scripts": {
-    "dev": "vercel dev --listen 5050"
+    "local": "vercel dev --listen 5050"
   },
   "devDependencies": {
     "vercel": "^59.11.1"

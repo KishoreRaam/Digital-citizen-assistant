@@ -478,6 +478,33 @@ function dossierHtml(scheme) {
 }
 
 /* ============================================================
+   Form Assistant — wired to the currently matched scheme (session state
+   only, i.e. lastMatchResult), not to the decorative FORM_TEMPLATES mockup
+   below it. No LLM call: the checklist is pure string formatting of the
+   scheme's own eligibility text already in data/schemes.json.
+   ============================================================ */
+function renderFormAssistant() {
+  const scheme = lastMatchResult && lastMatchResult.hero && lastMatchResult.hero.scheme;
+  if (!scheme) {
+    els.formMatchedPanel.hidden = true;
+    els.formAssistantProtoLabel.hidden = false;
+    return;
+  }
+  els.formAssistantProtoLabel.hidden = true;
+  els.formMatchedPanel.hidden = false;
+  els.formMatchedName.textContent = scheme.name;
+  els.formMatchedChecklist.innerHTML = scheme.eligibility
+    .split(/[,;]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("");
+  const displayUrl = scheme.apply_url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  els.formMatchedLink.href = scheme.apply_url;
+  els.formMatchedLink.innerHTML = `${ARROW_ICON}<span>${escapeHtml(displayUrl)}</span>`;
+}
+
+/* ============================================================
    Search flow
    ============================================================ */
 let loadingStarted = 0;
@@ -492,6 +519,7 @@ async function runSearch() {
   try {
     const result = await matchSchemes(text);
     lastMatchResult = result;
+    renderFormAssistant();
     const elapsed = Date.now() - loadingStarted;
     const wait = Math.max(0, 900 - elapsed); // avoid a screen flash on instant local matches
     setTimeout(() => {
@@ -693,12 +721,14 @@ function initDemoParam() {
       secondary: byId["pradhan-mantri-fasal-bima-yojana"] ? [{ scheme: byId["pradhan-mantri-fasal-bima-yojana"], confidence: "medium" }] : [],
     };
     lastMatchResult = r;
+    renderFormAssistant();
     showScreen("results");
     renderResults(r);
   } else if (p === "nomatch") {
     lastSituationText = "எனக்கு உதவி தேவை.";
     const r = { detectedLang: "ta", hero: null, secondary: [] };
     lastMatchResult = r;
+    renderFormAssistant();
     showScreen("nomatch");
     renderNomatch(r);
   } else if (p === "error") {
@@ -922,6 +952,7 @@ async function loadSchemes() {
   setupRevealAnimations();
   setupScrollTimeline();
   setupFormAssistant();
+  renderFormAssistant();
   applyChromeI18n();
   setupCountUp();
   if (currentScreen === "input") showScreen("input");
