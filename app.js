@@ -1,6 +1,22 @@
 "use strict";
 
 /* ============================================================
+   App overview
+   ------------------------------------------------------------
+   This file controls the interactive welfare-assistant flow for the
+   current prototype. It manages:
+   - screen transitions (input/loading/results/no-match/error)
+   - situation text capture and language detection
+   - local scheme matching fallback logic
+   - DOM rendering for result cards and status screens
+   - user actions such as search, edit, retry, and replay
+
+   The app is intentionally built to be explicit and easy to extend:
+   each major section has a clear role and is written in a way that
+   can be replaced or upgraded later without rewriting the entire app.
+   ============================================================ */
+
+/* ============================================================
    State
    ============================================================ */
 let currentScreen = "input"; // 'input' | 'loading' | 'results' | 'nomatch' | 'error'
@@ -24,6 +40,13 @@ function detectLang(text) {
 /* ============================================================
    Local zero-hallucination matcher (fallback / offline path)
    Only ever returns schemes from the hardcoded SCHEMES catalogue.
+   ============================================================ */
+/* ============================================================
+   Local fallback matcher
+   ------------------------------------------------------------
+   This function implements the zero-hallucination fallback used by the
+   prototype when no backend route is available. It only scores schemes
+   from the known SCHEMES catalog and never invents new options.
    ============================================================ */
 function localMatchSchemes(text) {
   const lower = text.toLowerCase();
@@ -457,7 +480,14 @@ function dossierHtml(scheme, lang) {
    Search flow
    ============================================================ */
 let loadingStarted = 0;
-async function runSearch() {
+async /* ============================================================
+   Search flow
+   ------------------------------------------------------------
+   This is the main interaction for the product. It validates input,
+   starts the loading experience, waits for matching logic, and then
+   routes the user to the correct result screen.
+   ============================================================ */
+function runSearch() {
   const text = els.situationInput.value.trim();
   if (!text) { els.situationInput.focus(); return; }
   lastSituationText = text;
