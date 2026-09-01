@@ -1,6 +1,6 @@
 // UI chrome strings only (labels, buttons, headings). Independent of the
 // language the user typed their situation in / the language the reasoning
-// comes back in — see detectLang() and SCHEMES[].reasons in app.js / schemes.js.
+// comes back in — see detectLang() in app.js and data/schemes.json.
 "use strict";
 
 const I18N = {
@@ -30,8 +30,11 @@ const I18N = {
     verifyBadge: "Verify",
     whyQualify: "Why you qualify",
     whatYouGet: "What you get",
-    whatsNeeded: "What's needed to apply",
+    sourceLabel: "Source",
     nextStepLabel: "Next step",
+    confidenceHigh: "Strong match",
+    confidenceMedium: "Possible match",
+    confidenceLow: "Worth checking",
     backBtn: "← Start a new search",
     nomatchTitle: "No confirmed match found",
     nomatchBody: "Based on what you shared, we cannot confidently say you qualify for any scheme yet. A few more details will help us match you correctly.",
@@ -112,8 +115,11 @@ const I18N = {
     verifyBadge: "சரிபார்க்க",
     whyQualify: "நீங்கள் தகுதி பெறுவது ஏன்",
     whatYouGet: "நீங்கள் பெறுவது",
-    whatsNeeded: "விண்ணப்பிக்க தேவையானவை",
+    sourceLabel: "மூலம்",
     nextStepLabel: "அடுத்த படி",
+    confidenceHigh: "உறுதியான பொருத்தம்",
+    confidenceMedium: "சாத்தியமான பொருத்தம்",
+    confidenceLow: "சரிபார்க்க வேண்டியது",
     backBtn: "← புதிய தேடலைத் தொடங்கு",
     nomatchTitle: "உறுதியான பொருத்தம் இல்லை",
     nomatchBody: "நீங்கள் தந்த தகவலின் அடிப்படையில் இப்போது எந்தத் திட்டத்தையும் உறுதியாகச் சொல்ல முடியவில்லை. இன்னும் சில விவரங்கள் இருந்தால் சரியாகப் பொருத்த முடியும்.",
@@ -194,8 +200,11 @@ const I18N = {
     verifyBadge: "जाँचें",
     whyQualify: "आप पात्र क्यों हैं",
     whatYouGet: "आपको क्या मिलेगा",
-    whatsNeeded: "आवेदन के लिए ज़रूरी चीज़ें",
+    sourceLabel: "स्रोत",
     nextStepLabel: "अगला कदम",
+    confidenceHigh: "पक्का मेल",
+    confidenceMedium: "संभावित मेल",
+    confidenceLow: "जाँच लायक",
     backBtn: "← नई खोज शुरू करें",
     nomatchTitle: "कोई पक्का मेल नहीं मिला",
     nomatchBody: "आपने जो बताया उसके आधार पर हम अभी किसी योजना की पक्की पुष्टि नहीं कर सकते। कुछ और जानकारी मिलने पर सही मिलान हो सकेगा।",

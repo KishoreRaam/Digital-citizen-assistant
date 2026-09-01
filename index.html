@@ -38,8 +38,8 @@
           <a href="#app" class="nav-cta" data-i18n="navCta">Try it now</a>
         </nav>
 
-        <div class="lang-switch" aria-hidden="true" hidden>
-          <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+        <div class="lang-switch">
+          <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#346739" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"/></svg>
             <span id="langBtnLabel">English</span>
             <svg id="langCaret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#79AE6F" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
@@ -403,6 +403,10 @@
           <button class="nomatch-suggest-btn" data-fact="age" data-i18n="nomatchAddAge">+ Add your age</button>
           <button class="nomatch-suggest-btn" data-fact="family" data-i18n="nomatchAddFamily">+ Add family details</button>
         </div>
+        <div class="nomatch-detail-row" id="nomatchDetailRow" hidden>
+          <label class="nomatch-detail-label" id="nomatchDetailLabel" for="nomatchDetailInput"></label>
+          <input type="text" class="nomatch-detail-input" id="nomatchDetailInput">
+        </div>
         <button class="nomatch-retry" id="nomatchRetryBtn" data-i18n="nomatchRetry">Add details and search again</button>
       </div>
     </section>
@@ -439,7 +443,6 @@
 
 </div>
 
-<script src="schemes.js"></script>
 <script src="i18n.js"></script>
 <script src="app.js"></script>
 </body>

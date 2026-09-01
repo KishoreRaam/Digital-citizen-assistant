@@ -22,7 +22,16 @@
 let currentScreen = "input"; // 'input' | 'loading' | 'results' | 'nomatch' | 'error'
 let chromeLang = "en";       // UI chrome only — independent of query/response language
 let lastSituationText = "";
-let lastMatchResult = null;  // { detectedLang, hero, secondary, hint }
+let lastMatchResult = null;  // { detectedLang, hero: {scheme,confidence}|null, secondary: [{scheme,confidence}] }
+let activeNomatchFact = null; // "age" | "family" | null — which no-match suggestion chip is open
+
+// Full 120-scheme catalogue (data/schemes.json), loaded once at startup —
+// see loadSchemes() in the Init section at the bottom of this file.
+let SCHEMES = [];
+
+// The app has no per-user profile/residency input yet, so every request is
+// made on behalf of a Tamil Nadu resident — the only state this demo covers.
+const RESIDENT_STATE = "Tamil Nadu";
 
 const els = {};
 document.querySelectorAll("[id]").forEach((el) => { els[el.id] = el; });
@@ -39,22 +48,20 @@ function detectLang(text) {
 
 /* ============================================================
    Local zero-hallucination matcher (fallback / offline path)
-   Only ever returns schemes from the hardcoded SCHEMES catalogue.
-   ============================================================ */
-/* ============================================================
-   Local fallback matcher
-   ------------------------------------------------------------
-   This function implements the zero-hallucination fallback used by the
-   prototype when no backend route is available. It only scores schemes
-   from the known SCHEMES catalog and never invents new options.
+   Only ever returns schemes from the SCHEMES catalogue. Scores by literal
+   word overlap between the situation text and each scheme's English name /
+   department / eligibility / description — the catalogue has no per-scheme
+   keyword list or translated body text, so this fallback only finds
+   signal in English (or English-word) input; Tamil/Hindi input offline
+   falls through to "no match" until the live API is reachable again.
    ============================================================ */
 function localMatchSchemes(text) {
-  const lower = text.toLowerCase();
+  const words = [...new Set((text.toLowerCase().match(/[a-z]{4,}/g) || []))];
+  if (words.length === 0) return [];
+
   const scored = SCHEMES.map((s) => {
-    let score = 0;
-    for (const kw of s.keywords) {
-      if (lower.includes(kw.toLowerCase())) score++;
-    }
+    const haystack = `${s.name} ${s.department} ${s.eligibility} ${s.description}`.toLowerCase();
+    const score = words.reduce((n, w) => n + (haystack.includes(w) ? 1 : 0), 0);
     return { scheme: s, score };
   }).filter((r) => r.score > 0);
 
@@ -64,16 +71,20 @@ function localMatchSchemes(text) {
 
 function buildResultFromLocalMatch(text) {
   const lang = detectLang(text);
-  const scored = localMatchSchemes(text);
+  const scored = localMatchSchemes(text)
+    .filter((r) => r.scheme.level === "central" || r.scheme.state === RESIDENT_STATE)
+    .slice(0, 5);
 
-  // No keyword signal at all — genuinely nothing to go on.
   if (scored.length === 0) {
-    return { detectedLang: lang, hero: null, secondary: [], hint: null };
+    return { detectedLang: lang, hero: null, secondary: [] };
   }
 
-  const hero = scored[0];
-  const secondary = scored.slice(1, 3).map((r) => ({ scheme: r.scheme, uncertain: r.score < hero.score }));
-  return { detectedLang: lang, hero: hero.scheme, secondary, hint: null };
+  const top = scored[0].score;
+  const ranked = scored.map((r) => ({
+    scheme: r.scheme,
+    confidence: r.score >= top ? "high" : r.score >= top / 2 ? "medium" : "low",
+  }));
+  return { detectedLang: lang, hero: ranked[0], secondary: ranked.slice(1) };
 }
 
 /* ============================================================
@@ -89,7 +100,7 @@ async function matchSchemes(text) {
       const res = await fetch("/api/match-schemes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, state: RESIDENT_STATE }),
         signal: controller.signal,
       });
       clearTimeout(t);
@@ -101,13 +112,17 @@ async function matchSchemes(text) {
       if (res.status >= 500) {
         throw new Error("backend_error_" + res.status);
       }
-      // 404 or similar: no backend deployed here — fall back quietly
+      // 404 or similar: no backend deployed here — fall back quietly, but
+      // still surface it in the console so a broken/missing backend during
+      // local dev is never silently indistinguishable from a real no-match.
+      console.warn(`[Thaguthi] /api/match-schemes returned ${res.status} — falling back to the local offline matcher (English-only, much weaker than the live match). If a backend should be running, check it's actually deployed/reachable at this URL.`);
     } catch (err) {
       if (err && err.name !== "AbortError" && String(err.message || "").startsWith("backend_error_")) {
         throw err;
       }
       if (err && err.name === "TypeError") {
         // fetch couldn't even reach a route — no backend present, fall back quietly
+        console.warn("[Thaguthi] /api/match-schemes was unreachable (network-level failure) — falling back to the local offline matcher (English-only, much weaker than the live match).", err);
       } else if (err && err.name === "AbortError") {
         throw new Error("timeout");
       } else if (err && String(err.message || "").startsWith("backend_error_")) {
@@ -119,13 +134,15 @@ async function matchSchemes(text) {
 }
 
 function normalizeApiResult(data) {
-  // Expected shape from /api/match-schemes: { detectedLang, heroId, secondaryIds:[], hintId }
+  // Expected shape from /api/match-schemes: { detectedLang, matches: [{id, confidence}] }
   const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
+  const matches = (Array.isArray(data.matches) ? data.matches : [])
+    .map((m) => ({ scheme: byId[m.id], confidence: m.confidence }))
+    .filter((r) => r.scheme);
   return {
     detectedLang: data.detectedLang || "en",
-    hero: data.heroId ? byId[data.heroId] || null : null,
-    secondary: (data.secondaryIds || []).map((id) => ({ scheme: byId[id], uncertain: !!data.uncertain }) ).filter((r) => r.scheme),
-    hint: data.hintId ? byId[data.hintId] || null : null,
+    hero: matches[0] || null,
+    secondary: matches.slice(1),
   };
 }
 
@@ -161,10 +178,12 @@ function applyChromeI18n() {
   renderWhyStats();
   if (currentScreen === "results" && lastMatchResult) renderResults(lastMatchResult);
   if (currentScreen === "nomatch" && lastMatchResult) renderNomatch(lastMatchResult);
+  if (currentScreen === "nomatch" && activeNomatchFact) updateNomatchDetailLabel();
 }
 
 function setChromeLang(l) {
   chromeLang = l;
+  try { localStorage.setItem("chromeLang", l); } catch {}
   els.langMenu.hidden = true;
   els.langBtn.setAttribute("aria-expanded", "false");
   applyChromeI18n();
@@ -188,7 +207,7 @@ function renderChips() {
     b.textContent = c.text.trim();
     b.addEventListener("click", () => {
       els.situationInput.value = c.text;
-      els.situationInput.focus();
+      runSearch();
     });
     els.chips.appendChild(b);
   });
@@ -198,52 +217,52 @@ function renderChips() {
    Input screen — browsable scheme strip (a taste of the catalogue,
    visible before typing) and footer stats. Both chrome-translated.
    ============================================================ */
-const STRIP_SCHEME_IDS = ["pm-kisan", "mgnrega", "cmchis", "old-age-pension", "pmay-g", "post-matric-scholarship"];
-const SCHEME_BLURBS = {
-  "pm-kisan": {
-    en: "₹6,000/year direct income support for landholding farmers",
-    ta: "நிலம் வைத்திருக்கும் விவசாயிகளுக்கு ஆண்டுக்கு ₹6,000 நேரடி உதவி",
-    hi: "ज़मीन वाले किसानों को साल में ₹6,000 की सीधी सहायता",
-  },
-  "mgnrega": {
-    en: "100 days of guaranteed rural work every year",
-    ta: "ஆண்டுக்கு 100 நாட்கள் உறுதியான கிராமப்புற வேலை",
-    hi: "हर साल 100 दिन का गारंटीशुदा ग्रामीण काम",
-  },
-  "cmchis": {
-    en: "Cashless hospital treatment up to ₹5 lakh / family / year",
-    ta: "குடும்பத்திற்கு ஆண்டுக்கு ₹5 லட்சம் வரை பணமில்லாச் சிகிச்சை",
-    hi: "परिवार को साल में ₹5 लाख तक कैशलेस इलाज",
-  },
-  "old-age-pension": {
-    en: "Monthly pension for citizens aged 60 and above",
-    ta: "60 வயது மற்றும் அதற்கு மேற்பட்டோருக்கு மாதாந்திர ஓய்வூதியம்",
-    hi: "60 वर्ष और उससे अधिक उम्र वालों के लिए मासिक पेंशन",
-  },
-  "pmay-g": {
-    en: "Financial help to build a pucca house in rural areas",
-    ta: "கிராமப்புறங்களில் பக்கா வீடு கட்ட நிதி உதவி",
-    hi: "ग्रामीण क्षेत्रों में पक्का मकान बनाने के लिए आर्थिक सहायता",
-  },
-  "post-matric-scholarship": {
-    en: "Tuition and course costs covered for SC/ST students",
-    ta: "SC/ST மாணவர்களுக்கு கல்விக் கட்டணம் மற்றும் படிப்புச் செலவு",
-    hi: "SC/ST छात्रों के लिए ट्यूशन और पाठ्यक्रम खर्च कवर",
-  },
+const STRIP_SCHEME_IDS = [
+  "pm-kisan",
+  "mgnrega",
+  "chief-minister-s-comprehensive-health-insurance-scheme",
+  "indira-gandhi-national-old-age-pension-scheme",
+  "pradhan-mantri-awas-yojana-gramin",
+  "post-matric-scholarship-for-sc-students",
+];
+
+// Department names come from the xlsx catalogue in English only — this maps
+// each one to a UI-chrome translation, same role schemes.js's old
+// per-scheme CATEGORY_META played, just keyed by department instead.
+const DEPARTMENT_META = {
+  "Agriculture": { en: "Agriculture", ta: "விவசாயம்", hi: "कृषि" },
+  "Business/MSME": { en: "Business / MSME", ta: "வணிகம் & MSME", hi: "व्यवसाय / एमएसएमई" },
+  "Defence": { en: "Defence", ta: "பாதுகாப்பு", hi: "रक्षा" },
+  "Digital & IT": { en: "Digital & IT", ta: "டிஜிட்டல் & IT", hi: "डिजिटल एवं आईटी" },
+  "Education": { en: "Education", ta: "கல்வி", hi: "शिक्षा" },
+  "Employment": { en: "Employment", ta: "வேலைவாய்ப்பு", hi: "रोज़गार" },
+  "Energy": { en: "Energy", ta: "எரிசக்தி", hi: "ऊर्जा" },
+  "Finance/Banking": { en: "Finance / Banking", ta: "நிதி & வங்கி", hi: "वित्त एवं बैंकिंग" },
+  "Food & Civil Supplies": { en: "Food & Civil Supplies", ta: "உணவு & பொது விநியோகம்", hi: "खाद्य एवं आपूर्ति" },
+  "Health": { en: "Health", ta: "சுகாதாரம்", hi: "स्वास्थ्य" },
+  "Housing": { en: "Housing", ta: "வீட்டு வசதி", hi: "आवास" },
+  "Minority Affairs": { en: "Minority Affairs", ta: "சிறுபான்மையினர் நலன்", hi: "अल्पसंख्यक कल्याण" },
+  "Social Welfare": { en: "Social Welfare", ta: "சமூக நலன்", hi: "सामाजिक कल्याण" },
+  "Sports & Youth": { en: "Sports & Youth", ta: "விளையாட்டு & இளைஞர்", hi: "खेल एवं युवा" },
+  "Transport": { en: "Transport", ta: "போக்குவரத்து", hi: "परिवहन" },
+  "Women & Child": { en: "Women & Child", ta: "பெண்கள் & குழந்தைகள்", hi: "महिला एवं बाल" },
 };
+function departmentLabel(department, lang) {
+  const meta = DEPARTMENT_META[department];
+  return meta ? (meta[lang] || meta.en) : department;
+}
 
 function renderSchemeStrip() {
   const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
   els.schemeStrip.innerHTML = STRIP_SCHEME_IDS.map((id) => {
     const scheme = byId[id];
-    const blurb = SCHEME_BLURBS[id][chromeLang] || SCHEME_BLURBS[id].en;
-    const catMeta = CATEGORY_META[scheme.category];
-    const catLabel = catMeta ? (catMeta[chromeLang] || catMeta.en) : scheme.category;
+    if (!scheme) return "";
+    const catLabel = departmentLabel(scheme.department, chromeLang);
     return `
       <div class="strip-card">
         <div class="strip-card-head">${SHIELD_ICON}<span class="strip-card-cat">${escapeHtml(catLabel)}</span></div>
         <div class="strip-card-name">${escapeHtml(scheme.name)}</div>
-        <div class="strip-card-blurb" lang="${chromeLang}">${escapeHtml(blurb)}</div>
+        <div class="strip-card-blurb" lang="en">${escapeHtml(scheme.description)}</div>
       </div>`;
   }).join("");
 }
@@ -344,16 +363,19 @@ function renderResults(result) {
   const total = 1 + result.secondary.length;
   els.schemesCount.textContent = I18N[chromeLang].schemesCount(total);
 
-  els.heroCard.innerHTML = heroCardHtml(result.hero, lang);
-  els.secondaryGrid.innerHTML = result.secondary.map((r, i) => secondaryCardHtml(r, lang, i)).join("");
+  els.heroCard.innerHTML = heroCardHtml(result.hero);
+  els.secondaryGrid.innerHTML = result.secondary.map((r, i) => secondaryCardHtml(r, i)).join("");
 }
 
-function heroCardHtml(scheme, lang) {
-  const reason = scheme.reasons[lang] ? scheme.reasons[lang]() : scheme.reasons.en();
-  const reasonHtml = highlightReason(reason, scheme, lastSituationText);
-  const amountHtml = scheme.amount
-    ? `<span class="hero-amount">${escapeHtml(scheme.amount.value)}<span class="hero-amount-period" lang="${lang}"> ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</span></span>`
-    : "";
+function confidenceBadgeHtml(confidence) {
+  if (confidence === "high") return "";
+  const key = "confidence" + confidence.charAt(0).toUpperCase() + confidence.slice(1);
+  return `<span class="sc-badge">${escapeHtml(I18N[chromeLang][key])}</span>`;
+}
+
+function heroCardHtml(match) {
+  const { scheme, confidence } = match;
+  const badge = confidenceBadgeHtml(confidence);
 
   return `
     <div class="rowin hero-card">
@@ -367,111 +389,90 @@ function heroCardHtml(scheme, lang) {
           <path d="M38 51 l8 8 l16 -18" fill="none" stroke="#C9A227" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      ${categoryTagHtml(scheme, lang)}
-      <div class="hero-agency" lang="${lang}">${escapeHtml(scheme.agency[lang] || scheme.agency.en)}</div>
+      ${categoryTagHtml(scheme)}
+      <div class="hero-agency" lang="en">${escapeHtml(scheme.department)}</div>
       <div class="hero-name-row">
         <span class="hero-name">${escapeHtml(scheme.name)}</span>
-        ${amountHtml}
+        ${badge}
       </div>
       <div class="dossier-label" style="margin-top:12px">${escapeHtml(I18N[chromeLang].whyQualify)}</div>
-      <p class="hero-reason" lang="${lang}">${reasonHtml}</p>
-      ${whatYouGetHtml(scheme, lang)}
-      ${dossierHtml(scheme, lang)}
+      <p class="hero-reason" lang="en">${escapeHtml(scheme.eligibility)}</p>
+      ${benefitHtml(scheme)}
+      ${dossierHtml(scheme)}
     </div>`;
 }
 
-function secondaryCardHtml(r, lang, i) {
-  const scheme = r.scheme;
-  const reason = scheme.reasons[lang] ? scheme.reasons[lang]() : scheme.reasons.en();
-  const reasonHtml = highlightReason(reason, scheme, lastSituationText);
-  const amount = scheme.amount ? `<div class="sc-amount">${escapeHtml(scheme.amount.value)} ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</div>` : "";
-  const badge = r.uncertain ? `<span class="sc-badge">${escapeHtml(I18N[chromeLang].verifyBadge)}</span>` : "";
+function secondaryCardHtml(match, i) {
+  const { scheme, confidence } = match;
+  const badge = confidenceBadgeHtml(confidence);
   return `
     <div class="rowin secondary-card" style="animation-delay:${(i + 1) * 0.09}s">
-      ${categoryTagHtml(scheme, lang)}
+      ${categoryTagHtml(scheme)}
       <div class="sc-head">
-        <span class="sc-agency" lang="${lang}">${escapeHtml(scheme.agency[lang] || scheme.agency.en)}</span>
+        <span class="sc-agency" lang="en">${escapeHtml(scheme.department)}</span>
         ${badge}
       </div>
       <div class="sc-name">${escapeHtml(scheme.name)}</div>
-      ${amount}
-      <div class="sc-body" lang="${lang}">${reasonHtml}</div>
-      ${dossierHtml(scheme, lang)}
+      <div class="sc-body" lang="en">${escapeHtml(scheme.eligibility)}</div>
+      ${dossierHtml(scheme)}
     </div>`;
 }
 
 function renderNomatch(result) {
-  if (result.hint) {
-    const lang = result.detectedLang;
-    els.nhName.textContent = result.hint.name;
-    els.nhBody.textContent = result.hint.reasons[lang] ? result.hint.reasons[lang]() : result.hint.reasons.en();
-    els.nhBody.setAttribute("lang", lang);
-    els.nomatchHint.hidden = false;
-  } else {
-    els.nomatchHint.hidden = true;
-  }
+  // The API no longer returns a "closest possible" hint scheme alongside an
+  // empty match list, so this panel stays hidden — see match-schemes.js.
+  els.nomatchHint.hidden = true;
+}
+
+const NOMATCH_FACT_LABELS = {
+  age: { en: "Your age", ta: "உங்கள் வயது", hi: "आपकी उम्र" },
+  family: { en: "Family details", ta: "குடும்ப விவரங்கள்", hi: "पारिवारिक विवरण" },
+};
+function updateNomatchDetailLabel() {
+  const label = NOMATCH_FACT_LABELS[activeNomatchFact];
+  els.nomatchDetailLabel.textContent = label ? (label[chromeLang] || label.en) : "";
+}
+// Called whenever a fresh (new) no-match result is rendered, so a leftover
+// open chip/typed detail from a previous search doesn't carry over.
+function resetNomatchDetailInput() {
+  activeNomatchFact = null;
+  els.nomatchDetailRow.hidden = true;
+  els.nomatchDetailInput.value = "";
+  document.querySelectorAll(".nomatch-suggest-btn").forEach((b) => b.classList.remove("active"));
 }
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-/* ============================================================
-   "Why you qualify" — mark the 1-2 matched keywords from the
-   user's own text wherever they literally occur in the fixed,
-   hardcoded reasoning paragraph (never invents new wording).
-   ============================================================ */
-function highlightReason(reasonText, scheme, userText) {
-  const lowerUser = (userText || "").toLowerCase();
-  const hits = scheme.keywords.filter((kw) => kw.length > 2 && lowerUser.includes(kw.toLowerCase()));
-  const unique = [...new Set(hits)].sort((a, b) => b.length - a.length).slice(0, 2);
-  let html = escapeHtml(reasonText);
-  unique.forEach((kw) => {
-    const esc = escapeHtml(kw).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(esc, "i");
-    html = html.replace(re, (m) => `<mark class="match-mark">${m}</mark>`);
-  });
-  return html;
-}
-
 const SHIELD_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>';
 const CHECK_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9.5 12l2 2 3.5-4"/><circle cx="12" cy="12" r="9"/></svg>';
 const ARROW_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
-function categoryTagHtml(scheme, lang) {
-  const meta = CATEGORY_META[scheme.category];
-  const label = meta ? (meta[lang] || meta.en) : scheme.category;
+function categoryTagHtml(scheme) {
+  const label = departmentLabel(scheme.department, chromeLang);
   return `<div class="category-tag">${SHIELD_ICON}<span>${escapeHtml(label)}</span></div>`;
 }
 
-function whatYouGetHtml(scheme, lang) {
-  if (scheme.amount) {
-    return `
-      <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatYouGet)}</div>
-      <div class="passbook">
-        <div class="passbook-row head"><span>SCHEME</span><span>AMOUNT</span></div>
-        <div class="passbook-row"><span>${escapeHtml(scheme.name)}</span><span>${escapeHtml(scheme.amount.value)} ${escapeHtml(scheme.amount.period[lang] || scheme.amount.period.en)}</span></div>
-      </div>`;
-  }
-  if (scheme.benefit) {
-    const text = scheme.benefit[lang] || scheme.benefit.en;
-    return `<div class="benefit-line">${CHECK_ICON}<span lang="${lang}">${escapeHtml(text)}</span></div>`;
-  }
-  return "";
+function benefitHtml(scheme) {
+  return `
+    <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatYouGet)}</div>
+    <div class="benefit-line">${CHECK_ICON}<span lang="en">${escapeHtml(scheme.description)}</span></div>`;
 }
 
-function dossierHtml(scheme, lang) {
-  const docs = (scheme.apply && (scheme.apply[lang] || scheme.apply.en)) || [];
-  const next = scheme.nextStep ? (scheme.nextStep[lang] || scheme.nextStep.en) : "";
+// apply_url is the strongest field in the catalogue (100% coverage across
+// all 120 schemes) — always rendered as a real, clickable link, not just text.
+function dossierHtml(scheme) {
+  const displayUrl = scheme.apply_url.replace(/^https?:\/\//, "").replace(/\/$/, "");
   return `
     <div class="dossier">
       <div>
-        <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatsNeeded)}</div>
-        <ul class="dossier-list" lang="${lang}">${docs.map((d) => `<li>${escapeHtml(d)}</li>`).join("")}</ul>
+        <div class="dossier-label">${escapeHtml(I18N[chromeLang].sourceLabel)}</div>
+        <div class="dossier-next" lang="en"><span>${escapeHtml(scheme.source)}</span></div>
       </div>
       <div>
         <div class="dossier-label">${escapeHtml(I18N[chromeLang].nextStepLabel)}</div>
-        <div class="dossier-next" lang="${lang}">${ARROW_ICON}<span>${escapeHtml(next)}</span></div>
+        <a class="dossier-next apply-link" lang="en" href="${escapeHtml(scheme.apply_url)}" target="_blank" rel="noopener noreferrer">${ARROW_ICON}<span>${escapeHtml(displayUrl)}</span></a>
       </div>
     </div>`;
 }
@@ -480,14 +481,7 @@ function dossierHtml(scheme, lang) {
    Search flow
    ============================================================ */
 let loadingStarted = 0;
-async /* ============================================================
-   Search flow
-   ------------------------------------------------------------
-   This is the main interaction for the product. It validates input,
-   starts the loading experience, waits for matching logic, and then
-   routes the user to the correct result screen.
-   ============================================================ */
-function runSearch() {
+async function runSearch() {
   const text = els.situationInput.value.trim();
   if (!text) { els.situationInput.focus(); return; }
   lastSituationText = text;
@@ -502,6 +496,7 @@ function runSearch() {
     const wait = Math.max(0, 900 - elapsed); // avoid a screen flash on instant local matches
     setTimeout(() => {
       if (!result.hero) {
+        resetNomatchDetailInput();
         showScreen("nomatch");
         renderNomatch(result);
       } else {
@@ -604,12 +599,31 @@ els.replayBtn.addEventListener("click", fireSeal);
 // The seal graphic itself is tappable to replay, not just the "Replay seal" button —
 // event delegation because #resultSeal is recreated on every heroCard render.
 els.heroCard.addEventListener("click", (e) => { if (e.target.closest("#resultSeal")) fireSeal(); });
-// No-match "Add details and search again" — keep what they wrote so they can extend it, not retype.
-els.nomatchRetryBtn.addEventListener("click", () => resetToInput({ clear: false }));
+// No-match suggestion chips — clicking one opens a small inline input for
+// that specific detail, right on the no-match screen (no screen change).
+document.querySelectorAll(".nomatch-suggest-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".nomatch-suggest-btn").forEach((b) => b.classList.toggle("active", b === btn));
+    activeNomatchFact = btn.dataset.fact;
+    updateNomatchDetailLabel();
+    els.nomatchDetailRow.hidden = false;
+    els.nomatchDetailInput.value = "";
+    els.nomatchDetailInput.focus();
+  });
+});
+// "Add details and search again" merges whatever was typed into the inline
+// detail input into the situation text, then calls the exact same runSearch()
+// the main search bar uses — same endpoint, same loading state, same rendering.
+els.nomatchRetryBtn.addEventListener("click", () => {
+  const detail = (!els.nomatchDetailRow.hidden && els.nomatchDetailInput.value.trim()) || "";
+  els.situationInput.value = detail ? `${lastSituationText} ${detail}`.trim() : lastSituationText;
+  runSearch();
+});
+els.nomatchDetailInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); els.nomatchRetryBtn.click(); }
+});
 els.errorRetryBtn.addEventListener("click", runSearch);
 els.errorHomeBtn.addEventListener("click", () => resetToInput({ clear: true }));
-
-document.querySelectorAll(".nomatch-suggest-btn").forEach((b) => b.addEventListener("click", () => resetToInput({ clear: false })));
 
 els.langBtn.addEventListener("click", () => {
   const open = els.langMenu.hidden;
@@ -665,18 +679,25 @@ document.querySelectorAll(".nav-link").forEach((link) => {
    Dev-only QA entry points (not linked from the UI):
    ?demo=input|loading|results|nomatch|error
    ============================================================ */
-(function initDemoParam() {
+function initDemoParam() {
   const p = new URLSearchParams(location.search).get("demo");
   const mockText = "நான் ஒரு விவசாயி. 2 ஏக்கர் நிலத்தில் நெல் பயிரிடுகிறேன். இந்த ஆண்டு மழையின்றி பயிர் பாதிக்கப்பட்டு, வேறு எந்த வருமானமும் இல்லை. கடந்த மாதம் என் மகனுக்கு மருத்துவமனையில் அறுவை சிகிச்சை தேவைப்பட்டது, அதற்கான செலவும் பெரிதாக இருந்தது.";
+  const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
   if (p === "results") {
     lastSituationText = mockText;
-    const r = buildResultFromLocalMatch(mockText);
+    // Deterministic mock matches (not the fuzzy local matcher, which only
+    // scores English text) so this dev-only screen is stable to demo.
+    const r = {
+      detectedLang: "ta",
+      hero: byId["pm-kisan"] ? { scheme: byId["pm-kisan"], confidence: "high" } : null,
+      secondary: byId["pradhan-mantri-fasal-bima-yojana"] ? [{ scheme: byId["pradhan-mantri-fasal-bima-yojana"], confidence: "medium" }] : [],
+    };
     lastMatchResult = r;
     showScreen("results");
     renderResults(r);
   } else if (p === "nomatch") {
     lastSituationText = "எனக்கு உதவி தேவை.";
-    const r = { detectedLang: "ta", hero: null, secondary: [], hint: SCHEMES.find((s) => s.id === "mgnrega") };
+    const r = { detectedLang: "ta", hero: null, secondary: [] };
     lastMatchResult = r;
     showScreen("nomatch");
     renderNomatch(r);
@@ -685,7 +706,7 @@ document.querySelectorAll(".nav-link").forEach((link) => {
   } else if (p === "loading") {
     showScreen("loading");
   }
-})();
+}
 
 /* ============================================================
    Scroll-driven Vertical Timeline Flow for "How We Verify"
@@ -882,16 +903,33 @@ function setupFormAssistant() {
 /* ============================================================
    Init
    ============================================================ */
-setupStickyNav();
-setupRevealAnimations();
-setupScrollTimeline();
-setupFormAssistant();
-applyChromeI18n();
-setupCountUp();
-if (currentScreen === "input") showScreen("input");
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-  });
+async function loadSchemes() {
+  const res = await fetch("data/schemes.json");
+  SCHEMES = await res.json();
 }
+
+(async function init() {
+  // Every render below (chip/strip/footer text, and the ?demo= QA entry
+  // points) reads from SCHEMES, so the catalogue must be in before any of it runs.
+  await loadSchemes().catch(() => { SCHEMES = []; });
+
+  try {
+    const saved = localStorage.getItem("chromeLang");
+    if (saved && I18N[saved]) chromeLang = saved;
+  } catch {}
+
+  setupStickyNav();
+  setupRevealAnimations();
+  setupScrollTimeline();
+  setupFormAssistant();
+  applyChromeI18n();
+  setupCountUp();
+  if (currentScreen === "input") showScreen("input");
+  initDemoParam();
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+})();
