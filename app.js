@@ -290,7 +290,9 @@ function showScreen(name) {
     els["screen-" + s].hidden = s !== name;
   });
   window.scrollTo(0, 0);
-  if (name === "results") fireSeal();
+  // Not fired here: at this point renderResults() hasn't run yet, so
+  // #resultSeal either doesn't exist or is still the previous render's stale
+  // element. renderResults() calls fireSeal() itself once it's rebuilt it.
   if (name === "loading") startLoadingMsgs(); else stopLoadingMsgs();
 }
 
@@ -365,6 +367,7 @@ function renderResults(result) {
 
   els.heroCard.innerHTML = heroCardHtml(result.hero);
   els.secondaryGrid.innerHTML = result.secondary.map((r, i) => secondaryCardHtml(r, i)).join("");
+  fireSeal(); // #resultSeal was just (re)built above — safe to animate it now.
 }
 
 function confidenceBadgeHtml(confidence) {
