@@ -1,5 +1,5 @@
 "use strict";
-const SHELL_CACHE = "thaguthi-shell-v13";
+const SHELL_CACHE = "thaguthi-shell-v14";
 const FONT_CACHE = "thaguthi-fonts-v1";
 
 const SHELL_FILES = [
