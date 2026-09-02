@@ -35,6 +35,7 @@
           <a href="#form-assistant" class="nav-link" data-i18n="navForm">Form Assistant</a>
           <a href="#schemes-we-cover" class="nav-link" data-i18n="navSchemes">Schemes we cover</a>
           <a href="#why-this-exists" class="nav-link" data-i18n="navWhy">Why this exists</a>
+          <button type="button" class="nav-link" id="navProfileBtn" data-i18n="navProfile">My Profile</button>
           <a href="#app" class="nav-cta" data-i18n="navCta">Try it now</a>
         </nav>
 
@@ -449,6 +450,128 @@
     </div>
     <div class="footer-seal" aria-hidden="true">த</div>
   </footer>
+
+  <!-- ============ PROFILE MODAL ============ -->
+  <div id="profileModal" class="profile-modal" hidden>
+    <div class="profile-modal-inner">
+      <button type="button" class="profile-close-btn" id="profileCloseBtn" aria-label="Close">✕</button>
+
+      <div class="profile-modal-head">
+        <div class="card-seal" aria-hidden="true" style="position:static">த</div>
+        <div>
+          <h2 class="profile-modal-title" data-i18n="profileModalTitle">Your Profile</h2>
+          <p class="profile-modal-sub" data-i18n="profileModalSub">Fill this once — we'll use it to auto-fill application forms and suggest schemes you likely qualify for.</p>
+        </div>
+      </div>
+
+      <form id="profileForm" class="mockup-grid profile-grid" onsubmit="return false;">
+        <div class="form-group">
+          <label for="profileFullName" data-i18n="profileLabelName">Full name</label>
+          <input type="text" id="profileFullName" class="mockup-input" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="profileAge" data-i18n="profileLabelAge">Age</label>
+          <input type="number" id="profileAge" class="mockup-input" min="0" max="120" inputmode="numeric">
+        </div>
+
+        <div class="form-group">
+          <label for="profileGender" data-i18n="profileLabelGender">Gender</label>
+          <select id="profileGender" class="mockup-input form-select">
+            <option value="" data-i18n="selectOption">— Select —</option>
+            <option value="female" data-i18n="genderFemale">Female</option>
+            <option value="male" data-i18n="genderMale">Male</option>
+            <option value="other" data-i18n="genderOther">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="profileOccupation" data-i18n="profileLabelOccupation">Occupation</label>
+          <select id="profileOccupation" class="mockup-input form-select">
+            <option value="" data-i18n="selectOption">— Select —</option>
+            <option value="farmer" data-i18n="occFarmer">Farmer</option>
+            <option value="laborer" data-i18n="occLaborer">Daily wage labourer</option>
+            <option value="selfEmployed" data-i18n="occSelfEmployed">Self-employed / small business</option>
+            <option value="govtEmployee" data-i18n="occGovtEmployee">Government employee</option>
+            <option value="privateEmployee" data-i18n="occPrivateEmployee">Private employee</option>
+            <option value="unemployed" data-i18n="occUnemployed">Unemployed</option>
+            <option value="student" data-i18n="occStudent">Student</option>
+            <option value="homemaker" data-i18n="occHomemaker">Homemaker</option>
+            <option value="retired" data-i18n="occRetired">Retired / senior citizen</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="profileCategory" data-i18n="profileLabelCategory">Category</label>
+          <select id="profileCategory" class="mockup-input form-select">
+            <option value="" data-i18n="selectOption">— Select —</option>
+            <option value="general" data-i18n="catGeneral">General</option>
+            <option value="obc" data-i18n="catObc">OBC</option>
+            <option value="sc" data-i18n="catSc">SC</option>
+            <option value="st" data-i18n="catSt">ST</option>
+            <option value="minority" data-i18n="catMinority">Minority</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="profileMaritalStatus" data-i18n="profileLabelMarital">Marital status</label>
+          <select id="profileMaritalStatus" class="mockup-input form-select">
+            <option value="" data-i18n="selectOption">— Select —</option>
+            <option value="single" data-i18n="maritalSingle">Single</option>
+            <option value="married" data-i18n="maritalMarried">Married</option>
+            <option value="widowed" data-i18n="maritalWidowed">Widowed</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="profileIncome" data-i18n="profileLabelIncome">Annual family income (₹)</label>
+          <input type="number" id="profileIncome" class="mockup-input" min="0" inputmode="numeric">
+        </div>
+
+        <div class="form-group">
+          <label for="profileLand" data-i18n="profileLabelLand">Land holding (acres)</label>
+          <input type="number" id="profileLand" class="mockup-input" min="0" step="0.1" inputmode="decimal">
+        </div>
+
+        <div class="form-group">
+          <label for="profileFamilyMembers" data-i18n="profileLabelFamily">Family members</label>
+          <input type="number" id="profileFamilyMembers" class="mockup-input" min="0" inputmode="numeric">
+        </div>
+
+        <div class="form-group">
+          <label for="profileDistrict" data-i18n="profileLabelDistrict">District</label>
+          <input type="text" id="profileDistrict" class="mockup-input" placeholder="e.g. Thanjavur" autocomplete="address-level2">
+        </div>
+
+        <div class="form-group">
+          <label for="profileDisability" data-i18n="profileLabelDisability">Person with disability?</label>
+          <select id="profileDisability" class="mockup-input form-select">
+            <option value="no" data-i18n="answerNo">No</option>
+            <option value="yes" data-i18n="answerYes">Yes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="profileRationCard" data-i18n="profileLabelRation">BPL / ration card holder?</label>
+          <select id="profileRationCard" class="mockup-input form-select">
+            <option value="no" data-i18n="answerNo">No</option>
+            <option value="yes" data-i18n="answerYes">Yes</option>
+          </select>
+        </div>
+      </form>
+
+      <p class="profile-privacy-note" data-i18n="profilePrivacyNote">Saved only on this device — never sent anywhere except when you search for schemes.</p>
+
+      <div class="profile-modal-actions">
+        <button type="button" class="btn-reset-form" id="btnClearProfile" data-i18n="btnClearProfile">Clear profile</button>
+        <div class="profile-modal-actions-right">
+          <span class="profile-saved-tag" id="profileSavedTag" hidden data-i18n="profileSavedTag">Saved ✓</span>
+          <button type="button" class="btn-secondary-form" id="btnSaveProfile" data-i18n="btnSaveProfile">Save profile</button>
+          <button type="button" class="btn-primary-form" id="btnSaveFindSchemes" data-i18n="btnSaveFindSchemes">Save &amp; find schemes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 

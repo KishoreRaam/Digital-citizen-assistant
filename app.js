@@ -24,6 +24,7 @@ let chromeLang = "en";       // UI chrome only — independent of query/response
 let lastSituationText = "";
 let lastMatchResult = null;  // { detectedLang, hero: {scheme,confidence}|null, secondary: [{scheme,confidence}] }
 let activeNomatchFact = null; // "age" | "family" | null — which no-match suggestion chip is open
+let userProfile = null;      // saved basic-details profile, or null — see Profile section below
 
 // Full 120-scheme catalogue (data/schemes.json), loaded once at startup —
 // see loadSchemes() in the Init section at the bottom of this file.
@@ -179,6 +180,7 @@ function applyChromeI18n() {
   if (currentScreen === "results" && lastMatchResult) renderResults(lastMatchResult);
   if (currentScreen === "nomatch" && lastMatchResult) renderNomatch(lastMatchResult);
   if (currentScreen === "nomatch" && activeNomatchFact) updateNomatchDetailLabel();
+  renderFormAssistant();
 }
 
 function setChromeLang(l) {
@@ -252,6 +254,15 @@ function departmentLabel(department, lang) {
   return meta ? (meta[lang] || meta.en) : department;
 }
 
+// Scheme catalogue fields (name/eligibility/description/source) are English
+// by default; ta/hi versions live under scheme.i18n[lang], added by
+// scripts/translate-schemes.py. Falls back to English when a translation is
+// missing for a given scheme/field so nothing ever renders blank.
+function schemeText(scheme, field, lang) {
+  const translated = scheme.i18n && scheme.i18n[lang] && scheme.i18n[lang][field];
+  return translated || scheme[field];
+}
+
 function renderSchemeStrip() {
   const byId = Object.fromEntries(SCHEMES.map((s) => [s.id, s]));
   els.schemeStrip.innerHTML = STRIP_SCHEME_IDS.map((id) => {
@@ -261,8 +272,8 @@ function renderSchemeStrip() {
     return `
       <div class="strip-card">
         <div class="strip-card-head">${SHIELD_ICON}<span class="strip-card-cat">${escapeHtml(catLabel)}</span></div>
-        <div class="strip-card-name">${escapeHtml(scheme.name)}</div>
-        <div class="strip-card-blurb" lang="en">${escapeHtml(scheme.description)}</div>
+        <div class="strip-card-name" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "name", chromeLang))}</div>
+        <div class="strip-card-blurb" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "description", chromeLang))}</div>
       </div>`;
   }).join("");
 }
@@ -395,11 +406,11 @@ function heroCardHtml(match) {
       ${categoryTagHtml(scheme)}
       <div class="hero-agency" lang="en">${escapeHtml(scheme.department)}</div>
       <div class="hero-name-row">
-        <span class="hero-name">${escapeHtml(scheme.name)}</span>
+        <span class="hero-name" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "name", chromeLang))}</span>
         ${badge}
       </div>
       <div class="dossier-label" style="margin-top:12px">${escapeHtml(I18N[chromeLang].whyQualify)}</div>
-      <p class="hero-reason" lang="en">${escapeHtml(scheme.eligibility)}</p>
+      <p class="hero-reason" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "eligibility", chromeLang))}</p>
       ${benefitHtml(scheme)}
       ${dossierHtml(scheme)}
     </div>`;
@@ -415,8 +426,8 @@ function secondaryCardHtml(match, i) {
         <span class="sc-agency" lang="en">${escapeHtml(scheme.department)}</span>
         ${badge}
       </div>
-      <div class="sc-name">${escapeHtml(scheme.name)}</div>
-      <div class="sc-body" lang="en">${escapeHtml(scheme.eligibility)}</div>
+      <div class="sc-name" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "name", chromeLang))}</div>
+      <div class="sc-body" lang="${chromeLang}">${escapeHtml(schemeText(scheme, "eligibility", chromeLang))}</div>
       ${dossierHtml(scheme)}
     </div>`;
 }
@@ -460,7 +471,7 @@ function categoryTagHtml(scheme) {
 function benefitHtml(scheme) {
   return `
     <div class="dossier-label">${escapeHtml(I18N[chromeLang].whatYouGet)}</div>
-    <div class="benefit-line">${CHECK_ICON}<span lang="en">${escapeHtml(scheme.description)}</span></div>`;
+    <div class="benefit-line">${CHECK_ICON}<span lang="${chromeLang}">${escapeHtml(schemeText(scheme, "description", chromeLang))}</span></div>`;
 }
 
 // apply_url is the strongest field in the catalogue (100% coverage across
@@ -471,7 +482,7 @@ function dossierHtml(scheme) {
     <div class="dossier">
       <div>
         <div class="dossier-label">${escapeHtml(I18N[chromeLang].sourceLabel)}</div>
-        <div class="dossier-next" lang="en"><span>${escapeHtml(scheme.source)}</span></div>
+        <div class="dossier-next" lang="${chromeLang}"><span>${escapeHtml(schemeText(scheme, "source", chromeLang))}</span></div>
       </div>
       <div>
         <div class="dossier-label">${escapeHtml(I18N[chromeLang].nextStepLabel)}</div>
@@ -495,8 +506,10 @@ function renderFormAssistant() {
   }
   els.formAssistantProtoLabel.hidden = true;
   els.formMatchedPanel.hidden = false;
-  els.formMatchedName.textContent = scheme.name;
-  els.formMatchedChecklist.innerHTML = scheme.eligibility
+  els.formMatchedName.textContent = schemeText(scheme, "name", chromeLang);
+  els.formMatchedName.setAttribute("lang", chromeLang);
+  els.formMatchedChecklist.setAttribute("lang", chromeLang);
+  els.formMatchedChecklist.innerHTML = schemeText(scheme, "eligibility", chromeLang)
     .split(/[,;]/)
     .map((s) => s.trim())
     .filter(Boolean)
@@ -505,6 +518,146 @@ function renderFormAssistant() {
   const displayUrl = scheme.apply_url.replace(/^https?:\/\//, "").replace(/\/$/, "");
   els.formMatchedLink.href = scheme.apply_url;
   els.formMatchedLink.innerHTML = `${ARROW_ICON}<span>${escapeHtml(displayUrl)}</span>`;
+}
+
+/* ============================================================
+   Profile — one-time basic details, saved locally only. Used to (a) build
+   a situation sentence for the same scheme-matching pipeline runSearch()
+   already uses, and (b) pre-fill the Form Assistant mockup fields instead
+   of its canned per-template sample data. Never sent anywhere except as
+   part of a normal search request.
+   ============================================================ */
+const PROFILE_STORAGE_KEY = "thaguthiProfile";
+
+// English-only labels, independent of chromeLang — these feed the situation
+// text sent to the matcher/API, which only understands English/Tamil/Hindi
+// prose, not raw form keys.
+const OCCUPATION_LABELS = {
+  farmer: "farmer", laborer: "daily wage labourer", selfEmployed: "self-employed / small business owner",
+  govtEmployee: "government employee", privateEmployee: "private employee", unemployed: "unemployed",
+  student: "student", homemaker: "homemaker", retired: "retired / senior citizen",
+};
+const CATEGORY_LABELS = { general: "General", obc: "OBC", sc: "SC", st: "ST", minority: "Minority" };
+
+const PROFILE_FIELD_IDS = [
+  "profileFullName", "profileAge", "profileGender", "profileOccupation", "profileCategory",
+  "profileMaritalStatus", "profileIncome", "profileLand", "profileFamilyMembers", "profileDistrict",
+  "profileDisability", "profileRationCard",
+];
+
+function loadProfileFromStorage() {
+  try {
+    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function saveProfileToStorage(profile) {
+  try { localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile)); } catch {}
+}
+function clearProfileFromStorage() {
+  try { localStorage.removeItem(PROFILE_STORAGE_KEY); } catch {}
+}
+
+function getProfileFormData() {
+  const profile = {};
+  PROFILE_FIELD_IDS.forEach((id) => {
+    const el = els[id];
+    if (el) profile[id] = el.value.trim();
+  });
+  return profile;
+}
+function setProfileFormData(profile) {
+  const p = profile || {};
+  PROFILE_FIELD_IDS.forEach((id) => {
+    const el = els[id];
+    if (!el) return;
+    // yes/no selects default to "no" rather than blank — a false "no" is a
+    // safer default than a false "yes" for eligibility-affecting facts.
+    const isYesNo = id === "profileDisability" || id === "profileRationCard";
+    el.value = p[id] || (isYesNo ? "no" : "");
+  });
+}
+
+function openProfileModal() {
+  setProfileFormData(userProfile);
+  els.profileSavedTag.hidden = true;
+  els.profileModal.hidden = false;
+}
+function closeProfileModal() {
+  els.profileModal.hidden = true;
+}
+
+// Composes a plain-English situation sentence from the profile — fed into
+// the exact same matchSchemes()/runSearch() pipeline as free-typed text, so
+// it benefits from the live API when reachable and the local fallback matcher
+// when not, with no separate matching logic to keep in sync.
+function buildSituationTextFromProfile(p) {
+  const parts = [];
+  if (p.profileAge && p.profileGender) {
+    parts.push(`I am a ${p.profileAge} year old ${p.profileGender}`);
+  } else if (p.profileAge) {
+    parts.push(`I am ${p.profileAge} years old`);
+  }
+  const occ = OCCUPATION_LABELS[p.profileOccupation];
+  if (occ) parts.push(`I work as a ${occ}`);
+  if (p.profileLand && Number(p.profileLand) > 0) parts.push(`I own ${p.profileLand} acres of farm land`);
+  if (p.profileDistrict) parts.push(`I live in ${p.profileDistrict}, ${RESIDENT_STATE}`);
+  if (p.profileIncome) parts.push(`My annual family income is about ₹${p.profileIncome}`);
+  if (p.profileFamilyMembers) parts.push(`There are ${p.profileFamilyMembers} members in my family`);
+  const cat = CATEGORY_LABELS[p.profileCategory];
+  if (cat && cat !== "General") parts.push(`I belong to the ${cat} category`);
+  if (p.profileMaritalStatus === "widowed") parts.push(`I am widowed`);
+  if (p.profileDisability === "yes") parts.push(`I have a disability`);
+  if (p.profileRationCard === "yes") parts.push(`I hold a BPL ration card`);
+  return parts.join(". ") + (parts.length ? "." : "");
+}
+
+// Overrides for the Form Assistant mockup's per-template sample data (see
+// FORM_TEMPLATES below) — only the fields the saved profile actually covers,
+// so an incomplete profile still falls back to the template's own sample.
+function profileOverlayForTemplate(key) {
+  if (!userProfile) return {};
+  const p = userProfile;
+  const overlay = {};
+  if (p.profileFullName) overlay.applicant = p.profileFullName;
+  const occLabel = OCCUPATION_LABELS[p.profileOccupation];
+  const catLabel = CATEGORY_LABELS[p.profileCategory];
+  if (occLabel) {
+    const occTitled = occLabel.charAt(0).toUpperCase() + occLabel.slice(1);
+    overlay.category = catLabel && catLabel !== "General" ? `${occTitled} (${catLabel})` : occTitled;
+  }
+  if (p.profileDistrict) overlay.district = `${p.profileDistrict}, ${RESIDENT_STATE}`;
+  if (key === "pmkisan" && p.profileLand) overlay.landIncome = `${p.profileLand} Acres`;
+  if (key === "cmchis" && p.profileIncome) overlay.landIncome = `₹${Number(p.profileIncome).toLocaleString("en-IN")} / year`;
+  if (key === "pension" && p.profileAge) {
+    overlay.landIncome = p.profileIncome
+      ? `${p.profileAge} Years / ₹${Number(p.profileIncome).toLocaleString("en-IN")} income`
+      : `${p.profileAge} Years`;
+  }
+  return overlay;
+}
+
+function handleSaveProfile() {
+  userProfile = getProfileFormData();
+  saveProfileToStorage(userProfile);
+  els.profileSavedTag.hidden = false;
+}
+
+function handleClearProfile() {
+  userProfile = null;
+  clearProfileFromStorage();
+  setProfileFormData(null);
+  els.profileSavedTag.hidden = true;
+}
+
+function handleSaveAndFindSchemes() {
+  userProfile = getProfileFormData();
+  saveProfileToStorage(userProfile);
+  const text = buildSituationTextFromProfile(userProfile);
+  closeProfileModal();
+  if (!text) { els.situationInput.focus(); return; }
+  els.situationInput.value = text;
+  runSearch();
 }
 
 /* ============================================================
@@ -656,6 +809,21 @@ els.nomatchDetailInput.addEventListener("keydown", (e) => {
 els.errorRetryBtn.addEventListener("click", runSearch);
 els.errorHomeBtn.addEventListener("click", () => resetToInput({ clear: true }));
 
+// Profile modal
+els.navProfileBtn.addEventListener("click", () => {
+  els.siteNav.classList.remove("open");
+  els.navToggle.setAttribute("aria-expanded", "false");
+  openProfileModal();
+});
+els.profileCloseBtn.addEventListener("click", closeProfileModal);
+els.profileModal.addEventListener("click", (e) => { if (e.target === els.profileModal) closeProfileModal(); });
+els.btnSaveProfile.addEventListener("click", handleSaveProfile);
+els.btnClearProfile.addEventListener("click", handleClearProfile);
+els.btnSaveFindSchemes.addEventListener("click", handleSaveAndFindSchemes);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !els.profileModal.hidden) closeProfileModal();
+});
+
 els.langBtn.addEventListener("click", () => {
   const open = els.langMenu.hidden;
   els.langMenu.hidden = !open;
@@ -687,7 +855,7 @@ document.addEventListener("click", (e) => {
 // Nav anchor links — the sections they point to only exist on the input
 // screen, so jump there first (without disturbing any typed text) before
 // smooth-scrolling to the target.
-document.querySelectorAll(".nav-link").forEach((link) => {
+document.querySelectorAll("a.nav-link").forEach((link) => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
     const targetId = link.getAttribute("href").slice(1);
@@ -824,7 +992,7 @@ function setupFormAssistant() {
   if (!select) return;
 
   function loadTemplate(key, triggerAutofill = true) {
-    const tpl = FORM_TEMPLATES[key] || FORM_TEMPLATES.pmkisan;
+    const tpl = { ...(FORM_TEMPLATES[key] || FORM_TEMPLATES.pmkisan), ...profileOverlayForTemplate(key) };
     if (els.mockupFormTitle) els.mockupFormTitle.textContent = tpl.title;
     if (els.mockupSourceText) els.mockupSourceText.textContent = tpl.sourceText;
     if (els.labelLandIncome) els.labelLandIncome.textContent = tpl.landLabel;
@@ -950,6 +1118,7 @@ async function loadSchemes() {
     const saved = localStorage.getItem("chromeLang");
     if (saved && I18N[saved]) chromeLang = saved;
   } catch {}
+  userProfile = loadProfileFromStorage();
 
   setupStickyNav();
   setupRevealAnimations();
