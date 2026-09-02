@@ -1,5 +1,5 @@
 "use strict";
-const SHELL_CACHE = "thaguthi-shell-v14";
+const SHELL_CACHE = "thaguthi-shell-v15";
 const FONT_CACHE = "thaguthi-fonts-v1";
 
 const SHELL_FILES = [
@@ -7,6 +7,7 @@ const SHELL_FILES = [
   "./style.css",
   "./app.js",
   "./i18n.js",
+  "./benefitCalculator.js",
   "./data/schemes.json",
   "./manifest.json",
   "./icons/icon-192.png",
