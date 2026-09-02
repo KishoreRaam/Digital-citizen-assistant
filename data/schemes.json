@@ -22,7 +22,12 @@
         "description": "फसल कटाई के बाद प्रबंधन अवसंरचना और सामुदायिक कृषि संपत्तियों के लिए 3% ब्याज छूट के साथ मध्यम-दीर्घकालिक ऋण वित्तपोषण।",
         "source": "आधिकारिक AIF पोर्टल, कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "kisan-credit-card",
@@ -47,7 +52,12 @@
         "description": "फसल की खेती और संबद्ध गतिविधियों के लिए रियायती ब्याज (समय पर पुनर्भुगतान सब्सिडी के साथ प्रभावी ~4% प्रति वर्ष) पर समय पर, अल्पकालिक ऋण प्रदान करता है।",
         "source": "वित्तीय सेवा विभाग / NABARD आधिकारिक जानकारी।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-kisan-maandhan-yojana",
@@ -72,7 +82,12 @@
         "description": "स्वैच्छिक पेंशन योजना जो 60 वर्ष की आयु के बाद किसानों को मासिक योगदान (55-200 रुपये) के आधार पर 3,000 रुपये/माह देती है, जिसे सरकार द्वारा समान रूप से मिलाया जाता है।",
         "source": "आधिकारिक पेंशन योजना पोर्टल, LIC/कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 3000.0,
+    "benefit_amount_max": 3000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pm-kisan",
@@ -97,7 +112,12 @@
         "description": "पात्र किसान परिवारों के बैंक खातों में 2,000 रुपये की 3 समान किस्तों में 6,000 रुपये/वर्ष की प्रत्यक्ष आय सहायता।",
         "source": "कृषि एवं किसान कल्याण विभाग का आधिकारिक पोर्टल, भारत सरकार।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 6000.0,
+    "benefit_amount_max": 6000.0,
+    "application_cost": 0.0
   },
   {
     "id": "paramparagat-krishi-vikas-yojana",
@@ -122,7 +142,12 @@
         "description": "प्रमाणन सहायता के साथ क्लस्टर-आधारित जैविक खेती को बढ़ावा देता है; 3 वर्षों में 50,000 रुपये/हेक्टेयर की वित्तीय सहायता।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय जैविक खेती केंद्र।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 50000.0,
+    "benefit_amount_max": 50000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-fasal-bima-yojana",
@@ -147,7 +172,12 @@
         "description": "कम प्रीमियम (खरीफ के लिए 2%, रबी के लिए 1.5%) पर प्राकृतिक आपदाओं, कीटों और रोगों के कारण उपज के नुकसान के खिलाफ कवरेज प्रदान करने वाली फसल बीमा योजना।",
         "source": "आधिकारिक फसल बीमा पोर्टल, कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-krishi-sinchayee-yojana",
@@ -172,7 +202,12 @@
         "description": "'हर खेत को पानी' का लक्ष्य - सिंचाई कवरेज का विस्तार करना और सूक्ष्म-सिंचाई सब्सिडी के माध्यम से जल उपयोग दक्षता में सुधार करना।",
         "source": "आधिकारिक पोर्टल, जल शक्ति मंत्रालय / कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "rashtriya-krishi-vikas-yojana",
@@ -197,7 +232,12 @@
         "description": "अवसंरचना और नवाचार परियोजनाओं के माध्यम से कृषि और संबद्ध क्षेत्रों के समग्र विकास के लिए राज्यों को वित्तीय सहायता प्रदान करती है।",
         "source": "आधिकारिक RKVY पोर्टल, कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "soil-health-card-scheme",
@@ -222,7 +262,12 @@
         "description": "किसानों को मिट्टी की पोषक स्थिति और उर्वरकों की अनुशंसित खुराक प्रदान करता है ताकि इनपुट के विवेकपूर्ण उपयोग के माध्यम से उत्पादकता में सुधार हो सके।",
         "source": "आधिकारिक पोर्टल, कृषि एवं किसान कल्याण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tamil-nadu-agricultural-labourers-welfare-board-scheme",
@@ -247,7 +292,12 @@
         "description": "पंजीकृत कृषि श्रमिकों के लिए 3 लाख रुपये का दुर्घटना बीमा, सेवानिवृत्ति की आयु के बाद 2,000 रुपये प्रति माह पेंशन, और मातृत्व सहायता प्रदान की जाती है।",
         "source": "तमिलनाडु श्रम कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 2000.0,
+    "benefit_amount_max": 2000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tamil-nadu-cm-solar-powered-pumpset-scheme",
@@ -272,7 +322,12 @@
         "description": "किसानों को 3HP/5HP/7.5HP सौर-संचालित कृषि पंपसेट स्थापित करने के लिए 80-90% सब्सिडी, जिससे ग्रिड बिजली पर निर्भरता कम होती है।",
         "source": "तमिलनाडु कृषि इंजीनियरिंग विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tamil-nadu-free-power-for-farmers-scheme",
@@ -297,7 +352,12 @@
         "description": "सिंचाई के लिए उपयोग किए जाने वाले कृषि पंपसेटों के लिए प्रतिदिन 9 घंटे मुफ्त बिजली प्रदान की जाती है, जिससे किसानों की इनपुट लागत कम होती है।",
         "source": "TANGEDCO / तमिलनाडु विद्युत विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tamil-nadu-marine-fishermen-welfare-scheme",
@@ -322,7 +382,12 @@
         "description": "10 लाख रुपये का दुर्घटना बीमा, नावों/जालों पर 50% सब्सिडी, और मछली पकड़ने पर प्रतिबंध की अवधि के लिए 5,000 रुपये की लीन-सीजन सहायता।",
         "source": "तमिलनाडु मत्स्य पालन विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 5000.0,
+    "benefit_amount_max": 5000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tamil-nadu-uzhavar-pathukappu",
@@ -347,7 +412,12 @@
         "description": "छोटे किसानों को मुफ्त/सब्सिडी वाले बीज, 50% तक जैव-उर्वरक सब्सिडी और 50-75% फसल/इनपुट सब्सिडी सहायता प्रदान की जाती है।",
         "source": "तमिलनाडु कृषि विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "e-nam",
@@ -372,7 +442,12 @@
         "description": "कृषि उपज के लिए एक एकीकृत राष्ट्रीय बाजार बनाने के लिए मौजूदा APMC मंडियों को जोड़ने वाला अखिल भारतीय इलेक्ट्रॉनिक ट्रेडिंग पोर्टल।",
         "source": "आधिकारिक e-NAM पोर्टल, कृषि मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "credit-guarantee-fund-trust-for-micro-small-enterprises",
@@ -397,7 +472,12 @@
         "description": "बैंकों/NBFCs को क्रेडिट गारंटी कवर प्रदान करता है ताकि MSEs 5 करोड़ रुपये तक के संपार्श्विक-मुक्त ऋण प्राप्त कर सकें।",
         "source": "आधिकारिक पोर्टल, MSME मंत्रालय / SIDBI।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "emergency-credit-line-guarantee-scheme",
@@ -422,7 +502,12 @@
         "description": "परिचालन देनदारियों को पूरा करने और व्यवसाय को फिर से शुरू करने में मदद करने के लिए मौजूदा MSME ऋण लेने वालों को 100% गारंटीकृत अतिरिक्त ऋण प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, National Credit Guarantee Trustee Company."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "new-entrepreneur-cum-enterprise-development-scheme",
@@ -447,7 +532,12 @@
         "description": "MSME स्थापित करने वाले प्रथम पीढ़ी के उद्यमियों के लिए 25% पूंजीगत सब्सिडी (विशेष श्रेणियों के लिए अधिक) और ब्याज सहायता प्रदान की जाती है।",
         "source": "TN Industries Dept. / TIIC; आधिकारिक योजना पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-employment-generation-programme",
@@ -472,7 +562,12 @@
         "description": "KVIC/बैंकों के माध्यम से विनिर्माण/सेवा क्षेत्रों में नए सूक्ष्म उद्यम स्थापित करने के लिए ऋण-लिंक्ड सब्सिडी (15-35%) प्रदान की जाती है।",
         "source": "आधिकारिक पोर्टल, Khadi & Village Industries Commission."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-svanidhi",
@@ -497,7 +592,12 @@
         "description": "ब्याज सब्सिडी के साथ स्ट्रीट वेंडर्स के लिए संपार्श्विक-मुक्त कार्यशील पूंजी ऋण (10,000 रुपये से शुरू, 20,000 रुपये और फिर 50,000 रुपये तक स्केलेबल)।",
         "source": "आधिकारिक पोर्टल, Ministry of Housing & Urban Affairs."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-vishwakarma-yojana",
@@ -522,7 +622,12 @@
         "description": "15,000 रुपये का टूलकिट प्रोत्साहन, रियायती दर पर 3 लाख रुपये तक का संपार्श्विक-मुक्त ऋण, और कारीगरों के लिए वजीफे के साथ कौशल प्रशिक्षण।",
         "source": "आधिकारिक पोर्टल, Ministry of MSME."
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 15000.0,
+    "benefit_amount_max": 15000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-mudra-yojana",
@@ -547,7 +652,12 @@
         "description": "3 श्रेणियों के तहत संपार्श्विक-मुक्त ऋण - शिशु (50,000 रुपये तक), किशोर (5 लाख रुपये तक) और तरुण प्लस (20 लाख रुपये तक)।",
         "source": "आधिकारिक पोर्टल, Ministry of Finance / MUDRA Ltd."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "stand-up-india-scheme",
@@ -572,7 +682,12 @@
         "description": "नए उद्यमों के लिए प्रत्येक बैंक शाखा में कम से कम एक SC/ST और एक महिला उधारकर्ता को 10 लाख रुपये से 1 करोड़ रुपये के बीच बैंक ऋण।",
         "source": "आधिकारिक पोर्टल, Dept. of Financial Services."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "startup-india-seed-fund-scheme",
@@ -597,7 +712,12 @@
         "description": "प्रारंभिक चरण के स्टार्टअप्स को प्रूफ ऑफ कॉन्सेप्ट, प्रोटोटाइप डेवलपमेंट, प्रोडक्ट ट्रायल और मार्केट एंट्री के लिए वित्तीय सहायता प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, Dept. for Promotion of Industry & Internal Trade."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "udyam-registration",
@@ -622,7 +742,12 @@
         "description": "सरकारी योजनाओं का लाभ उठाने, प्राथमिकता के आधार पर ऋण और कर/सब्सिडी प्रोत्साहन प्राप्त करने के लिए MSME के लिए मुफ्त ऑनलाइन पंजीकरण।",
         "source": "आधिकारिक पोर्टल, Ministry of MSME."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "agnipath-agniveer-scheme",
@@ -647,7 +772,12 @@
         "description": "सशस्त्र बलों में 4 साल की सेवा; मासिक वेतन (रु.30,000-40,000) और पूरा होने पर एकमुश्त सेवा निधि पैकेज (~रु.11.71 लाख)।",
         "source": "आधिकारिक पोर्टल, Ministry of Defence."
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 30000.0,
+    "benefit_amount_max": 40000.0,
+    "application_cost": 0.0
   },
   {
     "id": "digital-india-programme",
@@ -672,7 +802,12 @@
         "description": "भारत को डिजिटल रूप से सशक्त समाज में बदलने के लिए एक व्यापक कार्यक्रम - इसमें ई-गवर्नेंस, डिजिटल बुनियादी ढांचा और डिजिटल साक्षरता शामिल है।",
         "source": "आधिकारिक पोर्टल, Ministry of Electronics & IT."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-wani",
@@ -697,7 +832,12 @@
         "description": "सार्वजनिक-निजी भागीदारी ढांचे के माध्यम से पूरे भारत में कम लागत वाले सार्वजनिक वाई-फाई हॉटस्पॉट के प्रसार को सक्षम बनाता है।",
         "source": "आधिकारिक पोर्टल, Dept. of Telecommunications."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "aicte-pragati-scholarship-for-girls",
@@ -722,7 +862,12 @@
         "description": "इंजीनियरिंग/तकनीकी पाठ्यक्रमों में महिलाओं की भागीदारी को बढ़ावा देने के लिए तकनीकी शिक्षा प्राप्त कर रही छात्राओं को रु.50,000/वर्ष की छात्रवृत्ति।",
         "source": "आधिकारिक AICTE छात्रवृत्ति पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 50000.0,
+    "benefit_amount_max": 50000.0,
+    "application_cost": 0.0
   },
   {
     "id": "aicte-saksham-scholarship-for-differently-abled-students",
@@ -747,7 +892,12 @@
         "description": "दिव्यांग छात्रों की तकनीकी शिक्षा का समर्थन करने के लिए रु.50,000/वर्ष की वित्तीय सहायता।",
         "source": "आधिकारिक AICTE छात्रवृत्ति पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 50000.0,
+    "benefit_amount_max": 50000.0,
+    "application_cost": 0.0
   },
   {
     "id": "beti-bachao-beti-padhao",
@@ -772,7 +922,12 @@
         "description": "घटते बाल लिंगानुपात को संबोधित करने और बालिका की शिक्षा और सशक्तिकरण को बढ़ावा देने के लिए बहु-क्षेत्रीय पहल।",
         "source": "Ministry of Women & Child Development."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "ennum-ezhuthum-mission",
@@ -797,7 +952,12 @@
         "description": "बुनियादी साक्षरता और संख्यात्मकता के लिए राज्य मिशन; डिजिटल पहल के तहत मिडिल स्कूल के छात्रों को मुफ्त टैबलेट भी वितरित करता है।",
         "source": "TN School Education Dept.; आधिकारिक मिशन पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "moovalur-ramamirtham-ammaiyar-ninaivu-scheme",
@@ -822,7 +982,12 @@
         "description": "पहली पीढ़ी की छात्राओं को स्नातक कॉलेज शिक्षा प्राप्त करने के लिए प्रोत्साहित करने हेतु 1,000 रुपये/माह का वजीफा।",
         "source": "TN Social Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1000.0,
+    "application_cost": 0.0
   },
   {
     "id": "naan-mudhalvan-scheme",
@@ -847,7 +1012,12 @@
         "description": "कौशल-विकास और रोजगार कार्यक्रम जो मुफ्त प्रमाणन पाठ्यक्रम, उद्योग परामर्श और सवेतन इंटर्नशिप/वजीफा प्रदान करता है।",
         "source": "TN Higher Education Dept.; आधिकारिक योजना पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "national-fellowship-for-obc-students",
@@ -872,7 +1042,12 @@
         "description": "उच्च शोध अध्ययन (M.Phil/PhD) कर रहे OBC छात्रों के लिए मासिक फैलोशिप और आकस्मिक अनुदान।",
         "source": "Ministry of Social Justice & Empowerment, NSP के माध्यम से।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "national-means-cum-merit-scholarship-scheme",
@@ -897,7 +1072,12 @@
         "description": "माध्यमिक विद्यालय स्तर पर ड्रॉपआउट को रोकने के लिए मेधावी छात्रों को 12,000 रुपये/वर्ष की छात्रवृत्ति।",
         "source": "Dept. of School Education & Literacy, NSP के माध्यम से।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 12000.0,
+    "benefit_amount_max": 12000.0,
+    "application_cost": 0.0
   },
   {
     "id": "national-scholarship-portal",
@@ -922,7 +1102,12 @@
         "description": "प्री-मैट्रिक, पोस्ट-मैट्रिक, मेरिट और अल्पसंख्यक छात्रवृत्तियों को कवर करने वाली 100 से अधिक केंद्रीय और राज्य छात्रवृत्ति योजनाओं के लिए आवेदन करने हेतु वन-स्टॉप प्लेटफॉर्म।",
         "source": "आधिकारिक पोर्टल, Ministry of Electronics & IT / Ministry of Social Justice."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-poshan",
@@ -947,7 +1132,12 @@
         "description": "पोषण और स्कूल नामांकन/प्रतिधारण में सुधार के लिए स्कूल के दिनों में मुफ्त गर्म पका हुआ भोजन प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, Ministry of Education."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-vidyalaxmi-scheme",
@@ -972,7 +1162,12 @@
         "description": "शीर्ष-रैंक वाले संस्थानों में प्रवेश पाने वाले छात्रों के लिए बैंकों के माध्यम से ब्याज सबवेंशन के साथ संपार्श्विक-मुक्त (collateral-free) शिक्षा ऋण प्रदान करता है।",
         "source": "आधिकारिक शिक्षा ऋण पोर्टल, Dept. of Higher Education."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-yasasvi-scholarship",
@@ -997,7 +1192,12 @@
         "description": "OBC/EBC/DNT छात्रों के लिए गुणवत्तापूर्ण उच्च शिक्षा प्राप्त करने हेतु योग्यता-आधारित छात्रवृत्ति, जिसमें शीर्ष स्कूलों के लिए प्रवेश-परीक्षा आधारित पुरस्कार शामिल हैं।",
         "source": "Ministry of Social Justice & Empowerment, NSP के माध्यम से।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "post-matric-scholarship-for-sc-students",
@@ -1022,7 +1222,12 @@
         "description": "पोस्ट-मैट्रिक शिक्षा प्राप्त करने वाले अनुसूचित जाति के छात्रों के लिए शिक्षण शुल्क, रखरखाव भत्ता और अन्य शुल्क को कवर करता है।",
         "source": "Ministry of Social Justice & Empowerment, NSP के माध्यम से।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pre-matric-scholarship-for-sc-st-obc-minority-students",
@@ -1047,7 +1252,12 @@
         "description": "स्कूल स्तर पर वंचित छात्रों के बीच ड्रॉपआउट दर को कम करने के लिए वित्तीय सहायता (शुल्क + रखरखाव भत्ता)।",
         "source": "Ministry of Social Justice/Minority Affairs, NSP के माध्यम से।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pudhumai-penn-scheme",
@@ -1072,7 +1282,12 @@
         "description": "कक्षा 8-10 के बाद ड्रॉपआउट को कम करने के लिए छात्रा के अपने बैंक खाते में सीधे 1,000 रुपये प्रति माह (12,000 रुपये प्रति वर्ष) DBT के माध्यम से भुगतान किया जाता है।",
         "source": "TN School Education Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1000.0,
+    "application_cost": 0.0
   },
   {
     "id": "rajiv-gandhi-civil-abhayam-scheme",
@@ -1097,7 +1312,12 @@
         "description": "कम आय वाले पृष्ठभूमि के UPSC/TNPSC उम्मीदवारों के लिए मुफ्त आवासीय कोचिंग, अध्ययन सामग्री और मेंटरशिप।",
         "source": "TN BC/MBC Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "samagra-shiksha-abhiyan",
@@ -1122,7 +1342,12 @@
         "description": "स्कूली शिक्षा के लिए एकीकृत योजना जिसमें मुफ्त पाठ्यपुस्तकें, वर्दी, बुनियादी ढांचा, शिक्षक प्रशिक्षण और समावेशी शिक्षा सहायता शामिल है।",
         "source": "आधिकारिक पोर्टल, Dept. of School Education & Literacy."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "sukanya-samriddhi-yojana",
@@ -1147,7 +1372,12 @@
         "description": "बालिका की शिक्षा/विवाह के लिए उच्च ब्याज (~8.2% प्रति वर्ष) और कर लाभ (80C) प्रदान करने वाली छोटी बचत योजना।",
         "source": "Ministry of Finance / National Savings Institute."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-adi-dravidar-tribal-welfare-post-matric-scholarship",
@@ -1172,7 +1402,12 @@
         "description": "SC/ST छात्रों के लिए पूर्ण शिक्षण शुल्क और 230 रुपये से 1,200 रुपये प्रति माह रखरखाव भत्ता और छात्रावास सहायता को कवर करता है।",
         "source": "TN Adi Dravidar & Tribal Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 230.0,
+    "benefit_amount_max": 1200.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-bc-mbc-dnc-post-matric-scholarship",
@@ -1197,7 +1432,12 @@
         "description": "पिछड़ा वर्ग के छात्रों के लिए पूर्ण शिक्षण शुल्क प्रतिपूर्ति और 230 रुपये से 1,200 रुपये प्रति माह रखरखाव भत्ता।",
         "source": "TN BC/MBC Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 230.0,
+    "benefit_amount_max": 1200.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-chief-minister-s-breakfast-scheme",
@@ -1222,7 +1462,12 @@
         "description": "भूख से संबंधित स्कूल छोड़ने की दर को कम करने के लिए सरकारी प्राथमिक विद्यालय के छात्रों को हर स्कूल के दिन मुफ्त, पौष्टिक नाश्ता प्रदान किया जाता है।",
         "source": "TN School Education Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-chief-minister-s-free-laptop-scheme",
@@ -1247,7 +1492,12 @@
         "description": "शिक्षा में डिजिटल अंतर को पाटने के लिए पात्र स्कूली और कॉलेज छात्रों को मुफ्त लैपटॉप वितरित किए जाते हैं।",
         "source": "TN Higher Education Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "day-nrlm",
@@ -1272,7 +1522,12 @@
         "description": "रिवॉल्विंग फंड, सामुदायिक निवेश फंड और 3 लाख रुपये तक के बैंक-लिंकेज ऋण के साथ SHG-आधारित आजीविका को बढ़ावा देता है।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "deen-dayal-upadhyaya-grameen-kaushalya-yojana",
@@ -1297,7 +1552,12 @@
         "description": "ग्रामीण गरीब युवाओं के लिए नियमित मासिक वेतन रोजगार सुरक्षित करने हेतु प्लेसमेंट-लिंक्ड कौशल प्रशिक्षण कार्यक्रम।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "mgnrega",
@@ -1322,7 +1582,12 @@
         "description": "अकुशल शारीरिक कार्य का विकल्प चुनने वाले प्रत्येक ग्रामीण परिवार को प्रति वित्तीय वर्ष 100 दिनों के वेतन रोजगार की कानूनी गारंटी।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "national-apprenticeship-promotion-scheme",
@@ -1347,7 +1612,12 @@
         "description": "सरकार द्वारा वजीफे का 25% (1,500 रुपये/माह तक) नियोक्ताओं के साथ साझा करके शिक्षुता प्रशिक्षण को बढ़ावा देता है।",
         "source": "आधिकारिक शिक्षुता पोर्टल, कौशल विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1500.0,
+    "benefit_amount_max": 1500.0,
+    "application_cost": 0.0
   },
   {
     "id": "national-career-service",
@@ -1372,7 +1642,12 @@
         "description": "नौकरी चाहने वालों को नियोक्ताओं से जोड़ने वाला ऑनलाइन पोर्टल, करियर परामर्श और व्यावसायिक मार्गदर्शन सेवाएं मुफ्त में प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, श्रम और रोजगार मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-daksh-yojana",
@@ -1397,7 +1672,12 @@
         "description": "हाशिए पर रहने वाले समुदायों की रोजगार क्षमता में सुधार के लिए वजीफे के साथ मुफ्त अल्पकालिक और दीर्घकालिक कौशल प्रशिक्षण।",
         "source": "आधिकारिक पोर्टल, सामाजिक न्याय और अधिकारिता मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-internship-scheme",
@@ -1422,7 +1702,12 @@
         "description": "शीर्ष कंपनियों में 12 महीने की इंटर्नशिप प्रदान करती है, जिसमें 5,000 रुपये प्रति माह सरकारी वजीफा और कंपनी का योगदान, तथा 6,000 रुपये का एकमुश्त अनुदान मिलता है।",
         "source": "आधिकारिक पोर्टल, कॉर्पोरेट कार्य मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 5000.0,
+    "benefit_amount_max": 5000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-kaushal-vikas-yojana",
@@ -1447,7 +1732,12 @@
         "description": "PMKVY 4.0 के तहत प्रमाणन के साथ मुफ्त अल्पकालिक कौशल प्रशिक्षण और सफलतापूर्वक पूरा करने पर 8,000 रुपये का इनाम।",
         "source": "आधिकारिक पोर्टल, कौशल विकास और उद्यमिता मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 8000.0,
+    "benefit_amount_max": 8000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-amma-two-wheeler-scheme-for-working-women",
@@ -1472,7 +1762,12 @@
         "description": "कामकाजी महिलाओं को अपने कार्यस्थल तक स्वतंत्र रूप से आने-जाने में मदद करने के लिए दोपहिया वाहन की खरीद पर 50% सब्सिडी (एक सीमा तक) प्रदान की जाती है।",
         "source": "तमिलनाडु समाज कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-construction-workers-welfare-board-scheme",
@@ -1497,7 +1792,12 @@
         "description": "श्रमिकों के लिए 5 लाख रुपये का दुर्घटना लाभ, मातृत्व सहायता (~6,000 रुपये) और बच्चों की शिक्षा के लिए शैक्षिक सहायता (~15,000 रुपये/वर्ष)।",
         "source": "तमिलनाडु निर्माण श्रमिक कल्याण बोर्ड; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 500000.0,
+    "benefit_amount_max": 500000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-ex-servicemen-welfare-scheme",
@@ -1522,7 +1822,12 @@
         "description": "तमिलनाडु राज्य सरकार की नौकरियों में 10% आरक्षण, शिक्षा अनुदान और पूर्व सैनिकों व उनके परिवारों के लिए पेंशन टॉप-अप सहायता।",
         "source": "तमिलनाडु सैनिक कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-handloom-weavers-welfare-board-scheme",
@@ -1547,7 +1852,12 @@
         "description": "2 लाख रुपये का दुर्घटना बीमा, शिक्षा छात्रवृत्ति और 15% धागा सब्सिडी के साथ हथकरघा उत्पादों के लिए विपणन सहायता।",
         "source": "तमिलनाडु हथकरघा और कपड़ा विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 200000.0,
+    "benefit_amount_max": 200000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-magalir-thittam",
@@ -1572,7 +1882,12 @@
         "description": "महिला-नेतृत्व वाले सूक्ष्म उद्यमों का समर्थन करने के लिए प्रति स्वयं सहायता समूह 10,000-15,000 रुपये की रिवॉल्विंग फंड और बैंक ऋण लिंकेज प्रदान करती है।",
         "source": "तमिलनाडु मगालीर थिट्टम / ग्रामीण विकास विभाग; आधिकारिक पोर्टल।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 10000.0,
+    "benefit_amount_max": 15000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-salt-pan-workers-welfare-scheme",
@@ -1597,7 +1912,12 @@
         "description": "नमक पैन श्रमिकों के लिए 3 लाख रुपये का दुर्घटना कवर, ~1,500 रुपये प्रति माह पेंशन, और मातृत्व सहायता (~6,000 रुपये)।",
         "source": "तमिलनाडु श्रम कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1500.0,
+    "benefit_amount_max": 1500.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-thooimai-kavalar",
@@ -1622,7 +1942,12 @@
         "description": "स्वच्छता कर्मचारियों और उनके परिवारों के लिए 5 लाख रुपये का दुर्घटना बीमा, पुनर्वास सहायता और आवास में प्राथमिकता।",
         "source": "TN नगर प्रशासन विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 500000.0,
+    "benefit_amount_max": 500000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-unorganised-workers-social-security-scheme",
@@ -1647,7 +1972,12 @@
         "description": "असंगठित श्रमिकों के लिए 2 लाख रुपये का दुर्घटना कवर, मातृत्व सहायता (लगभग 6,000 रुपये) और विवाह सहायता (लगभग 3,000 रुपये)।",
         "source": "TN असंगठित श्रमिक कल्याण बोर्ड; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 3000.0,
+    "benefit_amount_max": 6000.0,
+    "application_cost": 0.0
   },
   {
     "id": "e-shram-card-scheme",
@@ -1672,7 +2002,12 @@
         "description": "असंगठित श्रमिकों का एक राष्ट्रीय डेटाबेस बनाना, 2 लाख रुपये का दुर्घटना बीमा कवर और कल्याणकारी योजनाओं तक पहुंच प्रदान करना।",
         "source": "आधिकारिक e-Shram पोर्टल, श्रम और रोजगार मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 200000.0,
+    "benefit_amount_max": 200000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pm-surya-ghar-muft-bijli-yojana",
@@ -1697,7 +2032,12 @@
         "description": "रूफटॉप सोलर इंस्टॉलेशन के लिए 78,000 रुपये तक की सब्सिडी, जिससे घरों को प्रति माह 300 यूनिट तक मुफ्त बिजली मिल सके।",
         "source": "आधिकारिक पोर्टल, नवीन और नवीकरणीय ऊर्जा मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 78000.0,
+    "benefit_amount_max": 78000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pm-kusum",
@@ -1722,7 +2062,12 @@
         "description": "स्टैंडअलोन सोलर पंप लगाने और मौजूदा ग्रिड से जुड़े कृषि पंपों को सौर ऊर्जा से जोड़ने के लिए वित्तीय सहायता (सब्सिडी)।",
         "source": "आधिकारिक पोर्टल, नवीन और नवीकरणीय ऊर्जा मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "atal-pension-yojana",
@@ -1747,7 +2092,12 @@
         "description": "60 वर्ष की आयु के बाद, योगदान राशि और शामिल होने की आयु के आधार पर 1,000-5,000 रुपये की गारंटीकृत मासिक पेंशन।",
         "source": "आधिकारिक पोर्टल, PFRDA / NPS Trust।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 5000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pm-swamitva-yojana",
@@ -1772,7 +2122,12 @@
         "description": "ड्रोन सर्वेक्षण तकनीक का उपयोग करके कानूनी संपत्ति स्वामित्व कार्ड (अधिकारों का रिकॉर्ड) प्रदान करना, जिससे संपत्ति को ऋण संपार्श्विक के रूप में उपयोग किया जा सके।",
         "source": "आधिकारिक पोर्टल, पंचायती राज मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-jan-dhan-yojana",
@@ -1797,7 +2152,12 @@
         "description": "RuPay डेबिट कार्ड, 2 लाख रुपये का दुर्घटना बीमा और 10,000 रुपये की ओवरड्राफ्ट सुविधा के साथ शून्य-शेष बचत बैंक खाता।",
         "source": "आधिकारिक पोर्टल, वित्तीय सेवा विभाग।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 200000.0,
+    "benefit_amount_max": 200000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-jeevan-jyoti-bima-yojana",
@@ -1822,7 +2182,12 @@
         "description": "किसी भी कारण से मृत्यु होने पर 2 लाख रुपये का नवीकरणीय एक वर्षीय जीवन बीमा कवर, 436 रुपये के वार्षिक प्रीमियम पर।",
         "source": "आधिकारिक पोर्टल, वित्तीय सेवा विभाग / जन सुरक्षा।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "annual",
+    "benefit_amount_min": 200000.0,
+    "benefit_amount_max": 200000.0,
+    "application_cost": 436.0
   },
   {
     "id": "pradhan-mantri-suraksha-bima-yojana",
@@ -1847,7 +2212,12 @@
         "description": "दुर्घटना में मृत्यु और विकलांगता के लिए 2 लाख रुपये का कवर (आंशिक विकलांगता के लिए 1 लाख रुपये), 20 रुपये के वार्षिक प्रीमियम पर।",
         "source": "आधिकारिक पोर्टल, वित्तीय सेवा विभाग / जन सुरक्षा।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "annual",
+    "benefit_amount_min": 100000.0,
+    "benefit_amount_max": 200000.0,
+    "application_cost": 20.0
   },
   {
     "id": "national-food-security-act",
@@ -1872,7 +2242,12 @@
         "description": "सार्वजनिक वितरण प्रणाली के माध्यम से पात्र राशन कार्ड धारकों को 1-3 रुपये प्रति किलोग्राम की दर से सब्सिडी वाला खाद्यान्न (चावल/गेहूं) प्रदान किया जाता है।",
         "source": "आधिकारिक पोर्टल, खाद्य और सार्वजनिक वितरण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pm-garib-kalyan-anna-yojana",
@@ -1897,7 +2272,12 @@
         "description": "खाद्य सुरक्षा पर आर्थिक संकट के प्रभाव को कम करने के लिए NFSA लाभार्थियों को मुफ्त अतिरिक्त खाद्यान्न प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, खाद्य और सार्वजनिक वितरण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "ayushman-bharat-pradhan-mantri-jan-arogya-yojana",
@@ -1922,7 +2302,12 @@
         "description": "पंजीकृत अस्पतालों में माध्यमिक और तृतीयक अस्पताल में भर्ती के लिए प्रति परिवार प्रति वर्ष 5 लाख रुपये का कैशलेस स्वास्थ्य बीमा कवर प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य प्राधिकरण।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "annual",
+    "benefit_amount_min": 500000.0,
+    "benefit_amount_max": 500000.0,
+    "application_cost": 0.0
   },
   {
     "id": "ayushman-bharat-digital-mission",
@@ -1947,7 +2332,12 @@
         "description": "एक अद्वितीय आयुष्मान भारत स्वास्थ्य खाता (ABHA ID) के साथ एक डिजिटल स्वास्थ्य पारिस्थितिकी तंत्र बनाता है जो स्वास्थ्य रिकॉर्ड को डिजिटल रूप से जोड़ता है।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य प्राधिकरण।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "chief-minister-s-comprehensive-health-insurance-scheme",
@@ -1972,7 +2362,12 @@
         "description": "पंजीकृत सरकारी और निजी अस्पतालों में प्रमुख सर्जरी/उपचार के लिए कैशलेस स्वास्थ्य बीमा कवर (कवर को 25 लाख रुपये तक बढ़ाया गया है, अगस्त 2026 तक प्रभावी तिथि प्रतीक्षित है)।",
         "source": "तमिलनाडु स्वास्थ्य प्रणाली परियोजना (TNHSP); SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "annual",
+    "benefit_amount_min": 2500000.0,
+    "benefit_amount_max": 2500000.0,
+    "application_cost": 0.0
   },
   {
     "id": "dr-muthulakshmi-reddy-maternity-benefit-scheme",
@@ -1997,7 +2392,12 @@
         "description": "गर्भवती/स्तनपान कराने वाली माताओं को पोषण में सहायता करने और प्रसव के दौरान मजदूरी के नुकसान को कम करने के लिए किस्तों में 18,000 रुपये की नकद सहायता।",
         "source": "तमिलनाडु समाज कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 18000.0,
+    "benefit_amount_max": 18000.0,
+    "application_cost": 0.0
   },
   {
     "id": "janani-suraksha-yojana",
@@ -2022,7 +2422,12 @@
         "description": "मातृ और नवजात मृत्यु दर को कम करने के लिए संस्थागत प्रसव को बढ़ावा देने हेतु नकद सहायता।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "makkalai-thedi-maruthuvam",
@@ -2047,7 +2452,12 @@
         "description": "स्वास्थ्य स्वयंसेवकों द्वारा 27 बीमारियों के लिए मुफ्त जांच और दवाओं की मुफ्त डोरस्टेप डिलीवरी प्रदान करने वाली डोरस्टेप स्वास्थ्य सेवा योजना।",
         "source": "तमिलनाडु स्वास्थ्य और परिवार कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "national-health-mission",
@@ -2072,7 +2482,12 @@
         "description": "सार्वजनिक स्वास्थ्य प्रणालियों को मजबूत करने वाला अम्ब्रेला कार्यक्रम - मातृ/बाल स्वास्थ्य, रोग नियंत्रण और स्वास्थ्य बुनियादी ढांचा।",
         "source": "आधिकारिक पोर्टल, स्वास्थ्य और परिवार कल्याण मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-bhartiya-janaushadhi-pariyojana",
@@ -2097,7 +2512,12 @@
         "description": "समर्पित जन औषधि आउटलेट्स के माध्यम से ब्रांडेड दवाओं की तुलना में 50-90% कम कीमतों पर गुणवत्तापूर्ण जेनेरिक दवाएं प्रदान करता है।",
         "source": "आधिकारिक जन औषधि पोर्टल, फार्मास्यूटिकल्स विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-surakshit-matritva-abhiyan",
@@ -2122,7 +2542,12 @@
         "description": "सरकारी स्वास्थ्य सुविधाओं पर हर महीने की 9 तारीख को मुफ्त, निश्चित-दिवसीय प्रसवपूर्व जांच प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "rashtriya-bal-swasthya-karyakram",
@@ -2147,7 +2572,12 @@
         "description": "बच्चों में 4 डी (4 D's) - जन्म के समय दोष, बीमारियां, कमियां और विकासात्मक देरी की जांच करता है, साथ ही मुफ्त उपचार प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-differently-abled-pension-scheme",
@@ -2172,7 +2602,13 @@
         "description": "विकलांग व्यक्तियों का समर्थन करने के लिए लगभग 1,500 रुपये की मासिक पेंशन (80%+ विकलांगता वाले लोगों के लिए अधिक)।",
         "source": "तमिलनाडु दिव्यांग कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1500.0,
+    "benefit_amount_max": 1500.0,
+    "application_cost": 0.0,
+    "conflict_group": "tn-destitute-pension"
   },
   {
     "id": "tn-old-age-pension-scheme",
@@ -2197,7 +2633,13 @@
         "description": "पर्याप्त समर्थन के साधनों के बिना निराश्रित बुजुर्ग व्यक्तियों को लगभग 1,000-1,500 रुपये की मासिक पेंशन।",
         "source": "तमिलनाडु समाज कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1500.0,
+    "application_cost": 0.0,
+    "conflict_group": "tn-destitute-pension"
   },
   {
     "id": "kalaignar-kanavu-illam",
@@ -2222,7 +2664,12 @@
         "description": "TN Urban Habitat Development Board के माध्यम से PMAY-U के साथ मिलकर शहरी गरीबों को 1 लाख मुफ्त घर प्रदान करने की राज्य योजना।",
         "source": "TN Urban Habitat Development Board (TNUHDB); SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-awas-yojana-gramin",
@@ -2247,7 +2694,12 @@
         "description": "पात्र ग्रामीण परिवारों को बुनियादी सुविधाओं के साथ पक्का घर बनाने के लिए 1.20-1.30 लाख रुपये की वित्तीय सहायता।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 120000.0,
+    "benefit_amount_max": 130000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-awas-yojana-urban",
@@ -2272,7 +2724,12 @@
         "description": "होम लोन पर ब्याज सब्सिडी और किफायती शहरी आवास के निर्माण/खरीद के लिए प्रत्यक्ष वित्तीय सहायता प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, आवास और शहरी मामलों के मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tahdco-sc-st-housing-enterprise-loan-scheme",
@@ -2297,7 +2754,12 @@
         "description": "SC/ST परिवारों के लिए आवास के लिए 3 लाख रुपये तक और स्वरोजगार/उद्यम के लिए 10 लाख रुपये तक का 4% रियायती ब्याज दर पर ऋण।",
         "source": "तमिलनाडु आदि द्रविड़ हाउसिंग एंड डेवलपमेंट कॉर्प (TAHDCO)।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-housing-board-affordable-housing-scheme",
@@ -2322,7 +2784,12 @@
         "description": "तमिलनाडु हाउसिंग बोर्ड के माध्यम से तैयार EWS फ्लैट (लगभग 3-5 लाख रुपये) और LIG फ्लैट (लगभग 6-10 लाख रुपये) प्रदान करता है।",
         "source": "तमिलनाडु हाउसिंग बोर्ड; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "maulana-azad-national-fellowship",
@@ -2347,7 +2814,12 @@
         "description": "मान्यता प्राप्त संस्थानों में उच्च शोध अध्ययन (M.Phil./PhD) करने वाले अल्पसंख्यक छात्रों के लिए वित्तीय फेलोशिप।",
         "source": "आधिकारिक पोर्टल, अल्पसंख्यक कार्य मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "nai-udaan-scheme",
@@ -2372,7 +2844,12 @@
         "description": "UPSC/राज्य PSC प्रारंभिक परीक्षा पास करने के बाद मुख्य परीक्षा की तैयारी के लिए अल्पसंख्यक उम्मीदवारों को वित्तीय सहायता प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, अल्पसंख्यक कार्य मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-jan-vikas-karyakram",
@@ -2397,7 +2874,12 @@
         "description": "अल्पसंख्यक-बहुल क्षेत्रों में सामाजिक-आर्थिक बुनियादी ढांचा (स्कूल, छात्रावास, स्वास्थ्य केंद्र) बनाने वाला क्षेत्र विकास कार्यक्रम।",
         "source": "आधिकारिक पोर्टल, अल्पसंख्यक कार्य मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "adip-scheme",
@@ -2422,7 +2904,12 @@
         "description": "विकलांग व्यक्तियों को टिकाऊ, आधुनिक सहायता और उपकरण खरीदने/फिट करने के लिए वित्तीय सहायता प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, विकलांग व्यक्ति सशक्तिकरण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "deendayal-disabled-rehabilitation-scheme",
@@ -2447,7 +2934,12 @@
         "description": "विकलांग व्यक्तियों के लिए शिक्षा, व्यावसायिक प्रशिक्षण और पुनर्वास सेवाओं के लिए गैर-सरकारी संगठनों (NGOs) को सहायता अनुदान।",
         "source": "आधिकारिक पोर्टल, विकलांग व्यक्ति सशक्तिकरण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "indira-gandhi-national-old-age-pension-scheme",
@@ -2472,7 +2964,13 @@
         "description": "NSAP के अंतर्गत गरीबी रेखा से नीचे के वृद्ध व्यक्तियों को मासिक पेंशन 200-500 रुपये (आयु से जुड़ी)।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय (NSAP)।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 200.0,
+    "benefit_amount_max": 500.0,
+    "application_cost": 0.0,
+    "conflict_group": "tn-destitute-pension"
   },
   {
     "id": "national-social-assistance-programme",
@@ -2497,7 +2995,12 @@
         "description": "केंद्र सरकार से सामाजिक सहायता के रूप में गरीब परिवारों को वृद्धावस्था, विधवा और विकलांग पेंशन प्रदान करने वाला अम्ब्रेला कार्यक्रम।",
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "rashtriya-vayoshri-yojana",
@@ -2522,7 +3025,12 @@
         "description": "विकलांग वृद्ध व्यक्तियों को मुफ्त सहायक जीवन सहायता और उपकरण (छड़ी, सुनने की मशीन, व्हीलचेयर आदि) प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, सामाजिक न्याय और अधिकारिता मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-adi-dravidar-tribal-welfare-hostels-scholarships",
@@ -2547,7 +3055,12 @@
         "description": "घर से दूर शिक्षा प्राप्त करने वाले SC/ST छात्रों के लिए मुफ्त छात्रावास आवास, भोजन और 15,000-25,000 रुपये प्रति वर्ष की टॉप-अप छात्रवृत्ति।",
         "source": "TAHDCO / TN आदि द्रविड़ कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 15000.0,
+    "benefit_amount_max": 25000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-chief-minister-s-public-relief-fund",
@@ -2572,7 +3085,12 @@
         "description": "आपदा, चिकित्सा आपातकाल या आकस्मिक मृत्यु का सामना करने वाले परिवारों के लिए 10,000 रुपये से 5 लाख रुपये तक की आपातकालीन वित्तीय सहायता।",
         "source": "TN मुख्यमंत्री कार्यालय; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "coverage",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 10000.0,
+    "benefit_amount_max": 500000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-disability-welfare-rehabilitation-schemes",
@@ -2597,7 +3115,12 @@
         "description": "मुफ्त सहायक उपकरण, विकलांग व्यक्तियों के लिए 50,000 रुपये की विवाह सहायता, और TN सरकारी नौकरियों/शिक्षा में 4% आरक्षण।",
         "source": "TN विकलांग कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 50000.0,
+    "benefit_amount_max": 50000.0,
+    "application_cost": 0.0
   },
   {
     "id": "unique-disability-id",
@@ -2622,7 +3145,12 @@
         "description": "भारत भर में विकलांगता कल्याण लाभों तक पहुंच को सुव्यवस्थित करने के लिए एक राष्ट्रीय आईडी कार्ड और विकलांगता प्रमाण पत्र जारी करता है।",
         "source": "आधिकारिक पोर्टल, दिव्यांगजन सशक्तिकरण विभाग।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "khelo-india-scheme",
@@ -2647,7 +3175,12 @@
         "description": "खेलो इंडिया केंद्रों, वार्षिक खेलों और प्रतिभाशाली एथलीटों के लिए 6.28 लाख रुपये प्रति वर्ष तक की छात्रवृत्ति के माध्यम से खेल प्रतिभाओं की पहचान करता है और उन्हें निखारता है।",
         "source": "आधिकारिक पोर्टल, युवा कार्यक्रम और खेल मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "annual",
+    "benefit_amount_min": 628000.0,
+    "benefit_amount_max": 628000.0,
+    "application_cost": 0.0
   },
   {
     "id": "national-sports-talent-search-scheme",
@@ -2672,7 +3205,12 @@
         "description": "प्रतिभाशाली युवा एथलीटों की पहचान करता है और निर्दिष्ट अकादमियों में वैज्ञानिक प्रशिक्षण, उपकरण और शैक्षिक सहायता प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, युवा कार्यक्रम और खेल मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-chief-minister-s-sports-achievement-award-development-scheme",
@@ -2697,7 +3235,12 @@
         "description": "TN एथलीटों को पोषित करने और पुरस्कृत करने के लिए नकद पुरस्कार (ओलंपिक स्वर्ण के लिए 3 करोड़ रुपये तक) और मासिक खेल छात्रवृत्ति (~2,000 रुपये)।",
         "source": "TN युवा कल्याण और खेल विकास विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 2000.0,
+    "benefit_amount_max": 2000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pm-e-drive-scheme",
@@ -2722,7 +3265,12 @@
         "description": "पूरे भारत में इलेक्ट्रिक वाहनों को अपनाने में तेजी लाने के लिए मांग प्रोत्साहन और बुनियादी ढांचा सहायता (चार्जिंग स्टेशन) प्रदान करता है।",
         "source": "आधिकारिक पोर्टल, भारी उद्योग मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "vidiyal-payanam-tn-free-bus-travel-scheme-for-women",
@@ -2747,7 +3295,12 @@
         "description": "पूरे तमिलनाडु में TNSTC/MTC बसों की साधारण सेवाओं में महिलाओं के लिए पूरी तरह से मुफ्त बस यात्रा (किराया राज्य द्वारा निगमों को प्रतिपूर्ति किया जाता है)।",
         "source": "TN परिवहन विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "day-nulm-self-help-group-scheme",
@@ -2772,7 +3325,12 @@
         "description": "शहरी महिलाओं की आजीविका सृजन के लिए रिवॉल्विंग फंड और बैंक ऋण लिंकेज (ब्याज सबवेंशन) के साथ शहरी SHG को बढ़ावा देता है।",
         "source": "आधिकारिक पोर्टल, आवास और शहरी मामलों के मंत्रालय।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "kalaignar-magalir-urimai-thogai",
@@ -2797,7 +3355,12 @@
         "description": "प्रत्यक्ष मासिक आय सहायता (~1,000 रुपये/माह, वर्तमान TN सरकार द्वारा बढ़ाई जा रही है) परिवार की महिला मुखिया के खाते में जमा की जाती है।",
         "source": "TN समाज कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित। (योजना का नाम/राशि 2026 तक बदल रही है - वर्तमान स्थिति सत्यापित करें।)"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1000.0,
+    "application_cost": 0.0
   },
   {
     "id": "mission-shakti",
@@ -2822,7 +3385,12 @@
         "description": "वन स्टॉप सेंटर, महिला हेल्पलाइन, आश्रय गृह और कौशल/आजीविका सहायता को कवर करने वाला एकीकृत महिला सुरक्षा और सशक्तिकरण मिशन।",
         "source": "आधिकारिक पोर्टल, Ministry of Women & Child Development."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "one-stop-centre-scheme",
@@ -2847,7 +3415,12 @@
         "description": "हिंसा से प्रभावित महिलाओं को एक ही छत के नीचे एकीकृत सहायता - चिकित्सा, कानूनी, पुलिस, मनोवैज्ञानिक और आश्रय सहायता - प्रदान करती है।",
         "source": "आधिकारिक पोर्टल, Ministry of Women & Child Development."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "pongal-gift-scheme",
@@ -2872,7 +3445,12 @@
         "description": "राशन कार्ड वाले परिवारों को वार्षिक पोंगल त्योहार उपहार के रूप में 1,000 रुपये नकद (DBT) के साथ मुफ्त चावल, चीनी और कपड़े (धोती/साड़ी) प्रदान किए जाते हैं।",
         "source": "TN Food, Civil Supplies & Consumer Protection Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-matru-vandana-yojana",
@@ -2897,7 +3475,12 @@
         "description": "मजदूरी के नुकसान की भरपाई करने और प्रसव से पहले/बाद में पर्याप्त पोषण और आराम को प्रोत्साहित करने के लिए किस्तों में 5,000 रुपये का नकद प्रोत्साहन।",
         "source": "आधिकारिक पोर्टल, Ministry of Women & Child Development."
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 5000.0,
+    "benefit_amount_max": 5000.0,
+    "application_cost": 0.0
   },
   {
     "id": "pradhan-mantri-ujjwala-yojana",
@@ -2922,7 +3505,12 @@
         "description": "गरीब परिवारों की महिलाओं के लिए असुरक्षित खाना पकाने के ईंधन को बदलने के लिए पहले रिफिल और चूल्हे के साथ मुफ्त LPG गैस कनेक्शन प्रदान करती है।",
         "source": "आधिकारिक पोर्टल, Ministry of Petroleum & Natural Gas."
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-free-lpg-connection-scheme-for-women",
@@ -2947,7 +3535,12 @@
         "description": "गरीब परिवारों के बीच स्वच्छ खाना पकाने के ईंधन को बढ़ावा देने के लिए मुफ्त डबल-बर्नर चूल्हे और सब्सिडी वाले/मुफ्त रिफिल के साथ मुफ्त LPG कनेक्शन।",
         "source": "TN Food, Civil Supplies & Consumer Protection Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "none",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
+    "application_cost": 0.0
   },
   {
     "id": "tn-marriage-assistance-schemes",
@@ -2972,7 +3565,12 @@
         "description": "आर्थिक रूप से कमजोर परिवारों की महिलाओं के विवाह खर्च का समर्थन करने के लिए 25,000-50,000 रुपये की नकद सहायता और 8 ग्राम सोने का सिक्का (थाली)।",
         "source": "TN Social Welfare / Adi Dravidar Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "one_time",
+    "benefit_amount_min": 25000.0,
+    "benefit_amount_max": 50000.0,
+    "application_cost": 0.0
   },
   {
     "id": "tn-widow-pension-scheme",
@@ -2997,6 +3595,12 @@
         "description": "पर्याप्त वित्तीय सहायता के बिना निराश्रित विधवाओं को लगभग 1,000-1,500 रुपये की मासिक पेंशन।",
         "source": "TN Social Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
-    }
+    },
+    "benefit_category": "cash",
+    "benefit_type": "monthly",
+    "benefit_amount_min": 1000.0,
+    "benefit_amount_max": 1500.0,
+    "application_cost": 0.0,
+    "conflict_group": "tn-destitute-pension"
   }
 ]

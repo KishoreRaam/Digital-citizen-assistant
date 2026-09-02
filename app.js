@@ -378,7 +378,150 @@ function renderResults(result) {
 
   els.heroCard.innerHTML = heroCardHtml(result.hero);
   els.secondaryGrid.innerHTML = result.secondary.map((r, i) => secondaryCardHtml(r, i)).join("");
+  renderBenefitDashboard(result);
   fireSeal(); // #resultSeal was just (re)built above — safe to animate it now.
+}
+
+/* ============================================================
+   Benefit Dashboard — pure computation over the matched schemes' static
+   catalogue fields (see benefitCalculator.js). No LLM call: the model only
+   ever decides which schemes matched; every number here is a lookup/sum, so
+   it can't drift from the catalogue.
+
+   Labels follow the situation's detected language (result.detectedLang),
+   same as spText/factTags above — not the chromeLang UI toggle — since this
+   panel is read together with the citizen's own words.
+   ============================================================ */
+const WARNING_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v4M12 17h.01M10.3 4.5L2.9 18a2 2 0 0 0 1.7 3h14.8a2 2 0 0 0 1.7-3L13.7 4.5a2 2 0 0 0-3.4 0z"/></svg>';
+
+function formatINR(n) {
+  return Math.round(n).toLocaleString("en-IN");
+}
+
+// One scheme's annualized figure as display text, e.g. "₹6,000" (fixed),
+// "₹1,000–₹1,500" (range), "up to ₹5,00,000" (a coverage ceiling — insurance
+// caps are money available if needed, not a guaranteed payout, unlike a
+// fixed one_time cash gift which needs no "up to" hedge).
+function amountRangeText(item, t) {
+  const isCeiling = item.benefitCategory === "coverage";
+  const amount = item.isRange
+    ? `₹${formatINR(item.annualLow)}–₹${formatINR(item.annualHigh)}`
+    : `₹${formatINR(item.annualHigh)}`;
+  return isCeiling ? t.benefitUpTo(amount) : amount;
+}
+
+// item.displayName/excludedNameShown are set by renderBenefitDashboard from
+// schemeText(scheme, "name", chromeLang) — scheme names follow chromeLang,
+// the same convention the hero/secondary cards right below use, so a row
+// here never disagrees with the card for the same scheme. Only this panel's
+// own labels (t, keyed by the situation's detected language) differ from
+// the cards, per the dashboard's language spec.
+function benefitBreakdownRowHtml(item, t) {
+  const byline =
+    item.benefitCategory === "coverage"
+      ? `<span class="bd-tag">${escapeHtml(t.benefitCoverageTag)}</span>`
+      : "";
+  const warning = item.excluded
+    ? `<div class="bd-warning">${WARNING_ICON}<span>${escapeHtml(t.benefitConflictWarning(item.excludedNameShown))}</span></div>`
+    : "";
+  const feeNote =
+    item.applicationCost > 0
+      ? `<div class="bd-fee">${escapeHtml(t.benefitApplicationCost(`₹${formatINR(item.applicationCost)}`))}</div>`
+      : "";
+  // A one_time cash gift isn't recurring — "/yr" on it would assert a
+  // yearly cadence the source data never stated (it's only annualized once,
+  // for the year-1 total).
+  const suffix =
+    item.benefitCategory === "coverage" || item.benefitType === "one_time" ? "" : t.benefitPerYearSuffix;
+  return `
+    <div class="bd-row${item.excluded ? " bd-row-excluded" : ""}">
+      <div class="bd-row-main">
+        <span class="bd-name" lang="${chromeLang}">${escapeHtml(item.displayName)}</span>
+        <span class="bd-amount">${amountRangeText(item, t)}${suffix}</span>
+      </div>
+      ${byline}
+      ${feeNote}
+      ${warning}
+    </div>`;
+}
+
+function renderBenefitDashboard(result) {
+  if (!els.benefitDashboard) return;
+
+  const matched = [result.hero, ...result.secondary].filter(Boolean).map((m) => m.scheme);
+  const dashboard = window.BenefitCalculator ? window.BenefitCalculator.computeBenefitDashboard(matched) : null;
+
+  if (!dashboard) {
+    els.benefitDashboard.innerHTML = "";
+    els.benefitDashboard.hidden = true;
+    return;
+  }
+
+  const lang = result.detectedLang;
+  const t = I18N[lang] || I18N.en;
+  els.benefitDashboard.hidden = false;
+
+  if (!dashboard.hasAnyAmount) {
+    els.benefitDashboard.innerHTML = `
+      <div class="benefit-dashboard-card benefit-dashboard-empty">
+        <div class="bd-title" lang="${lang}">${escapeHtml(t.benefitDashboardTitle)}</div>
+        <p class="bd-empty-msg" lang="${lang}">${escapeHtml(t.benefitEmptyState)}</p>
+      </div>`;
+    return;
+  }
+
+  // Scheme names follow chromeLang (schemeText), same as the hero/secondary
+  // cards below — resolved from `matched`, which still has the full scheme
+  // records (dashboard.items only carries the catalogue's English name).
+  const nameById = Object.fromEntries(matched.map((s) => [s.id, schemeText(s, "name", chromeLang)]));
+  dashboard.items.forEach((i) => {
+    i.displayName = nameById[i.id] || i.name;
+    if (i.excluded) i.excludedNameShown = nameById[i.excludedInFavorOf] || i.excludedInFavorOf;
+  });
+
+  const cashHeadline =
+    dashboard.cash.high > 0
+      ? dashboard.cash.isRange
+        ? `₹${formatINR(dashboard.cash.low)}–₹${formatINR(dashboard.cash.high)}`
+        : `₹${formatINR(dashboard.cash.high)}`
+      : null;
+
+  const missingOutHtml = cashHeadline
+    ? `<div class="bd-headline">${escapeHtml(t.benefitMissingOut(cashHeadline))}</div>`
+    : "";
+
+  const coverageTileHtml =
+    dashboard.coverage.high > 0
+      ? `
+      <div class="bd-tile">
+        <div class="bd-tile-label" lang="${lang}">${escapeHtml(t.benefitCoverageLabel)}</div>
+        <div class="bd-tile-value">${dashboard.coverage.isRange ? `₹${formatINR(dashboard.coverage.low)}–₹${formatINR(dashboard.coverage.high)}` : `₹${formatINR(dashboard.coverage.high)}`}</div>
+      </div>`
+      : "";
+
+  const breakdownItems = dashboard.items.filter((i) => i.hasAmount);
+  const breakdownHtml = breakdownItems.length
+    ? `
+      <div class="bd-breakdown">
+        <div class="dossier-label">${escapeHtml(t.benefitBreakdownLabel)}</div>
+        ${breakdownItems.map((i) => benefitBreakdownRowHtml(i, t)).join("")}
+      </div>`
+    : "";
+
+  els.benefitDashboard.innerHTML = `
+    <div class="benefit-dashboard-card">
+      <div class="bd-title" lang="${lang}">${escapeHtml(t.benefitDashboardTitle)}</div>
+      ${missingOutHtml}
+      <div class="bd-tiles">
+        <div class="bd-tile">
+          <div class="bd-tile-label" lang="${lang}">${escapeHtml(t.benefitCashLabel)}</div>
+          <div class="bd-tile-value">${cashHeadline ? cashHeadline : "—"}</div>
+        </div>
+        ${coverageTileHtml}
+      </div>
+      ${breakdownHtml}
+      <p class="bd-disclaimer" lang="${lang}">${escapeHtml(t.benefitDisclaimer)}</p>
+    </div>`;
 }
 
 function confidenceBadgeHtml(confidence) {

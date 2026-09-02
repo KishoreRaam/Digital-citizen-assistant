@@ -847,6 +847,35 @@ a.dossier-next.apply-link:hover span{text-decoration-color:currentColor}
 .secondary-card .dossier{grid-template-columns:1fr;gap:12px;margin-top:14px;padding-top:14px}
 .secondary-card .dossier-next{font-size:12px}
 
+/* Benefit Dashboard — same card language as .hero-card, distinguished by a
+   gold top edge (seal-gold, same token used for the eligibility seal) since
+   this panel is a computed total, not a single scheme's dossier. */
+/* .seal (the eligibility stamp on .hero-card, style.css ~816) overhangs
+   .hero-card's top edge by 20px — this margin must clear that overhang plus
+   breathing room, or the stamp lands on top of this card's own text. */
+.benefit-dashboard{margin-bottom:36px}
+.benefit-dashboard-card{background:#fff;border:1px solid var(--tint-border);border-top:3px solid var(--seal-gold);border-radius:15px;padding:22px 24px}
+.bd-title{font:600 11px var(--font-sans-latin);color:#8a8968;letter-spacing:.4px;text-transform:uppercase;margin-bottom:10px}
+.bd-headline{font:600 clamp(18px,2.4vw,23px) var(--font-serif-latin);color:var(--text-primary);text-wrap:pretty}
+.bd-tiles{display:flex;flex-wrap:wrap;gap:14px 28px;margin-top:16px}
+.bd-tile-label{font:500 11px var(--font-sans-ta);color:#8a8968}
+.bd-tile-value{font:600 clamp(20px,2.6vw,26px) var(--font-serif-latin);color:var(--text-primary);margin-top:2px}
+
+.bd-breakdown{margin-top:18px;padding-top:16px;border-top:1px solid #e2e7d3}
+.bd-row{padding:10px 0;border-bottom:1px solid #efefdd}
+.bd-row:last-child{border-bottom:none}
+.bd-row-main{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.bd-name{font:600 13.5px var(--font-sans-ta);color:var(--text-primary)}
+.bd-amount{font:600 13.5px var(--font-sans-latin);color:var(--text-primary);white-space:nowrap}
+.bd-tag{display:inline-block;margin-top:3px;font:600 10px var(--font-sans-latin);color:var(--accent-icon);letter-spacing:.2px;text-transform:uppercase}
+.bd-fee{margin-top:4px;font:500 11.5px var(--font-sans-ta);color:#8a8968}
+.bd-row-excluded .bd-name,.bd-row-excluded .bd-amount{color:#8a8968;text-decoration:line-through;text-decoration-color:rgba(138,137,104,.5)}
+.bd-warning{display:flex;align-items:flex-start;gap:6px;margin-top:5px;font:500 11.5px/1.5 var(--font-sans-ta);color:var(--seal-gold)}
+.bd-warning svg{flex:none;margin-top:1px}
+
+.bd-disclaimer{font:400 11px/1.6 var(--font-sans-latin);color:#8a8968;margin:16px 0 0;font-style:italic}
+.benefit-dashboard-empty .bd-empty-msg{font:400 13px/1.7 var(--font-sans-ta);color:#8a8968;margin:0}
+
 .back-search{text-align:center;margin-top:26px}
 .back-link{font:600 13px var(--font-sans-ta);color:var(--text-primary);background:none;border:none;cursor:pointer;text-decoration:underline}
 
