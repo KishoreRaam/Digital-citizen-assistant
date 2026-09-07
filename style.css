@@ -63,17 +63,28 @@ img,svg{display:block}
 .nav-link{font:600 14.5px var(--font-sans-latin);color:var(--text-primary);opacity:.75;white-space:nowrap}
 .nav-link:hover{opacity:1;color:var(--text-primary)}
 button.nav-link{background:none;border:none;padding:0;margin:0;cursor:pointer}
+.nav-link-profile{display:inline-flex;align-items:center;gap:7px;opacity:.85}
+.nav-link-profile svg{flex:none;color:#79AE6F}
+.nav-link-profile:hover{opacity:1}
+.nav-divider{display:none}
 .nav-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(52,103,57,.25);background:rgba(52,103,57,.06);color:var(--text-primary);font:700 14px var(--font-sans-latin);box-shadow:0 6px 16px rgba(52,103,57,.08);transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
 .nav-cta:hover{background:rgba(52,103,57,.1);box-shadow:0 8px 22px rgba(52,103,57,.14)}
 
 .nav-toggle{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid #c7c19a;background:#fbfaf0;cursor:pointer}
 
+.profile-icon-btn{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid #c7c19a;background:#fbfaf0;color:#346739;cursor:pointer;flex:none}
+.profile-icon-btn:hover{background:#f3f7ec;border-color:#79AE6F}
+
 @media (max-width:899px){
-  .site-nav{display:none;position:absolute;top:calc(100% + 10px);left:0;right:auto;min-width:210px;flex-direction:column;align-items:stretch;gap:0;background:#fff;border:1px solid #cdc699;border-radius:12px;padding:6px;box-shadow:0 12px 30px rgba(52,103,57,.18);z-index:40}
+  .site-nav{display:none;position:absolute;top:calc(100% + 10px);right:0;left:auto;min-width:224px;max-width:calc(100vw - 32px);flex-direction:column;align-items:stretch;gap:2px;background:#fff;border:1px solid #cdc699;border-radius:14px;padding:8px;box-shadow:0 16px 36px rgba(52,103,57,.2);z-index:40}
   .site-nav.open{display:flex}
-  .nav-link{padding:11px 12px;border-radius:8px;opacity:1}
+  .nav-link{padding:12px 13px;border-radius:9px;opacity:1}
   .nav-link:hover{background:#f7f5e6}
+  .nav-divider{display:block;height:1px;background:#e7e2c2;margin:6px 6px}
+  .nav-link-profile{opacity:1;font-weight:700}
+  .nav-cta{margin:6px 3px 2px}
   .nav-toggle{display:flex}
+  .profile-icon-btn{display:flex}
 }
 
 .lang-switch{position:relative;display:block}
@@ -529,6 +540,10 @@ html{scroll-behavior:smooth}
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.form-group[hidden] {
+  display: none;
 }
 
 .form-group label {

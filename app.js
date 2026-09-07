@@ -701,6 +701,25 @@ function clearProfileFromStorage() {
   try { localStorage.removeItem(PROFILE_STORAGE_KEY); } catch {}
 }
 
+// Some profile fields only make sense for certain occupations (e.g. land
+// holding only applies to farmers) — schemes are matched on occupation-
+// specific criteria, so asking every applicant for farm acreage is both
+// confusing and produces a bogus "0 acres" fact for non-farmers. Fields
+// carrying data-show-if-occupation are hidden (and cleared, so a stale
+// value from a previously-selected occupation never leaks into the
+// situation text) whenever the selected occupation isn't in their list.
+function applyProfileConditionalFields() {
+  const occ = els.profileOccupation.value;
+  document.querySelectorAll("#profileForm [data-show-if-occupation]").forEach((group) => {
+    const allowed = group.getAttribute("data-show-if-occupation").split(",");
+    const show = !occ || allowed.includes(occ);
+    group.hidden = !show;
+    if (!show) {
+      group.querySelectorAll("input,select").forEach((el) => { el.value = ""; });
+    }
+  });
+}
+
 function getProfileFormData() {
   const profile = {};
   PROFILE_FIELD_IDS.forEach((id) => {
@@ -719,6 +738,7 @@ function setProfileFormData(profile) {
     const isYesNo = id === "profileDisability" || id === "profileRationCard";
     el.value = p[id] || (isYesNo ? "no" : "");
   });
+  applyProfileConditionalFields();
 }
 
 function openProfileModal() {
@@ -953,13 +973,16 @@ els.errorRetryBtn.addEventListener("click", runSearch);
 els.errorHomeBtn.addEventListener("click", () => resetToInput({ clear: true }));
 
 // Profile modal
-els.navProfileBtn.addEventListener("click", () => {
+function handleProfileNavClick() {
   els.siteNav.classList.remove("open");
   els.navToggle.setAttribute("aria-expanded", "false");
   openProfileModal();
-});
+}
+els.navProfileBtn.addEventListener("click", handleProfileNavClick);
+els.profileIconBtn.addEventListener("click", handleProfileNavClick);
 els.profileCloseBtn.addEventListener("click", closeProfileModal);
 els.profileModal.addEventListener("click", (e) => { if (e.target === els.profileModal) closeProfileModal(); });
+els.profileOccupation.addEventListener("change", applyProfileConditionalFields);
 els.btnSaveProfile.addEventListener("click", handleSaveProfile);
 els.btnClearProfile.addEventListener("click", handleClearProfile);
 els.btnSaveFindSchemes.addEventListener("click", handleSaveAndFindSchemes);
