@@ -883,10 +883,13 @@ a.dossier-next.apply-link:hover span{text-decoration-color:currentColor}
 .bd-name{font:600 13.5px var(--font-sans-ta);color:var(--text-primary)}
 .bd-amount{font:600 13.5px var(--font-sans-latin);color:var(--text-primary);white-space:nowrap}
 .bd-tag{display:inline-block;margin-top:3px;font:600 10px var(--font-sans-latin);color:var(--accent-icon);letter-spacing:.2px;text-transform:uppercase}
+.bd-tag-varies{color:var(--seal-gold)}
 .bd-fee{margin-top:4px;font:500 11.5px var(--font-sans-ta);color:#8a8968}
 .bd-row-excluded .bd-name,.bd-row-excluded .bd-amount{color:#8a8968;text-decoration:line-through;text-decoration-color:rgba(138,137,104,.5)}
 .bd-warning{display:flex;align-items:flex-start;gap:6px;margin-top:5px;font:500 11.5px/1.5 var(--font-sans-ta);color:var(--seal-gold)}
 .bd-warning svg{flex:none;margin-top:1px}
+
+.bd-varies-note{margin:12px 0 0;padding:9px 12px;background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.3);border-radius:9px;font:500 11.5px/1.55 var(--font-sans-ta);color:#8a7326}
 
 .bd-disclaimer{font:400 11px/1.6 var(--font-sans-latin);color:#8a8968;margin:16px 0 0;font-style:italic}
 .benefit-dashboard-empty .bd-empty-msg{font:400 13px/1.7 var(--font-sans-ta);color:#8a8968;margin:0}

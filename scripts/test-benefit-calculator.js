@@ -80,3 +80,50 @@ test("all matched schemes have no stated amount: hasAnyAmount is false, not a �
   assert.equal(result.hasAnyAmount, false);
   assert.equal(result.cash.high, 0);
 });
+
+test("varies scheme (e.g. a percentage input subsidy): flagged via hasVariableSchemes, never folded into cash", () => {
+  const schemes = [
+    { id: "pm-kisan", name: "PM-KISAN", benefit_category: "cash", benefit_type: "annual", benefit_amount_min: 6000, benefit_amount_max: 6000, conflict_group: null },
+    // Modelled on real "% subsidy on input cost" schemes in the catalogue
+    // (e.g. drip-irrigation / farm-machinery subsidy schemes) — the rupee
+    // value depends on a purchase cost or land size the catalogue never
+    // states, so it must stay out of the total rather than being guessed.
+    { id: "micro-irrigation-subsidy", name: "Micro Irrigation Subsidy", benefit_category: "varies", benefit_type: null, benefit_amount_min: null, benefit_amount_max: null, conflict_group: null },
+  ];
+  const result = computeBenefitDashboard(schemes);
+  assert.equal(result.hasVariableSchemes, true);
+  assert.equal(result.cash.high, 6000); // the varies scheme contributes nothing to the total
+  const varies = result.items.find((i) => i.id === "micro-irrigation-subsidy");
+  assert.equal(varies.hasAmount, false);
+  assert.equal(varies.benefitCategory, "varies");
+});
+
+test("in-kind scheme (free device/training, no rupee value stated): kept out of every total, still surfaced", () => {
+  const schemes = [
+    { id: "free-bicycle-scheme", name: "Free Bicycle Scheme", benefit_category: "in_kind", benefit_type: null, benefit_amount_min: null, benefit_amount_max: null, conflict_group: null },
+  ];
+  const result = computeBenefitDashboard(schemes);
+  // In-kind-only matches still deserve a dashboard (not the "no data" empty
+  // state) — app.js's renderBenefitDashboard checks this alongside hasAnyAmount.
+  assert.equal(result.hasAnyAmount, false);
+  assert.equal(result.hasVariableSchemes, false);
+  const item = result.items.find((i) => i.id === "free-bicycle-scheme");
+  assert.equal(item.hasAmount, false);
+  assert.equal(item.benefitCategory, "in_kind");
+});
+
+test("range amount total is conservative: the low bound, not the high bound or a blended range", () => {
+  // Modelled on a real destitute/old-age pension scheme whose monthly amount
+  // varies ₹1,000–1,500 by district/category.
+  const schemes = [
+    { id: "tn-destitute-pension", name: "TN Destitute Pension", benefit_category: "cash", benefit_type: "monthly", benefit_amount_min: 1000, benefit_amount_max: 1500, conflict_group: null },
+  ];
+  const result = computeBenefitDashboard(schemes);
+  // The total a citizen is guaranteed is the low bound annualized (₹12,000),
+  // never the high bound (₹18,000) — that only appears on the item's own
+  // breakdown row (isRange / annualLow / annualHigh), never as "the total".
+  assert.equal(result.cash.low, 12000);
+  assert.equal(result.items[0].isRange, true);
+  assert.equal(result.items[0].annualLow, 12000);
+  assert.equal(result.items[0].annualHigh, 18000);
+});

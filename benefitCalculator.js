@@ -19,6 +19,18 @@ function schemeHasAmount(scheme) {
   ) && typeof scheme.benefit_amount_min === "number" && typeof scheme.benefit_amount_max === "number";
 }
 
+// "in_kind" (free device/training/service, no rupee figure stated) and
+// "varies" (a rate/percentage-based benefit that can't be pinned to a fixed
+// number from the catalogue, e.g. "50% subsidy on input cost") are both
+// non-null benefit_category values but neither has benefit_amount_min/max —
+// schemeHasAmount() above already excludes them from every cash/coverage sum.
+function schemeVaries(scheme) {
+  return scheme.benefit_category === "varies";
+}
+function schemeIsInKind(scheme) {
+  return scheme.benefit_category === "in_kind";
+}
+
 // Within each conflict_group present in the matched list, only the
 // highest-value scheme is counted toward the totals — the rest are flagged as
 // excluded rather than silently dropped, so the UI can still show a warning
@@ -100,7 +112,14 @@ function computeBenefitDashboard(matchedSchemes) {
   coverage.isRange = coverage.low !== coverage.high;
   const hasAnyAmount = cash.high > 0 || coverage.high > 0;
 
-  return { hasAnyAmount, cash, coverage, items, excludedGroups };
+  // A matched scheme with benefit_category "varies" has a real rupee benefit
+  // that depends on a rate/quantity the catalogue can't pin to one number
+  // (e.g. "50% subsidy on input cost") — it must never be folded into cash/
+  // coverage totals as a guess, so the UI needs to know to show a caveat
+  // near the total instead of implying the total is complete.
+  const hasVariableSchemes = matchedSchemes.some((s) => schemeVaries(s));
+
+  return { hasAnyAmount, hasVariableSchemes, cash, coverage, items, excludedGroups };
 }
 
 const BenefitCalculator = { computeBenefitDashboard, annualizeAmount };
