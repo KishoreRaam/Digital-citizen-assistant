@@ -410,6 +410,16 @@ function amountRangeText(item, t) {
   return isCeiling ? t.benefitUpTo(amount) : amount;
 }
 
+// "varies" (a rate/percentage the catalogue can't resolve to one figure, e.g.
+// "50% subsidy on input cost") and "in_kind" (a free device/training/service
+// with no rupee value stated) both carry no annualLow/annualHigh — this is
+// the cell shown in their place instead of a fabricated number.
+function amountCellText(item, t) {
+  if (item.benefitCategory === "varies") return t.benefitVariesText;
+  if (item.benefitCategory === "in_kind") return "—";
+  return amountRangeText(item, t);
+}
+
 // item.displayName/excludedNameShown are set by renderBenefitDashboard from
 // schemeText(scheme, "name", chromeLang) — scheme names follow chromeLang,
 // the same convention the hero/secondary cards right below use, so a row
@@ -420,6 +430,10 @@ function benefitBreakdownRowHtml(item, t) {
   const byline =
     item.benefitCategory === "coverage"
       ? `<span class="bd-tag">${escapeHtml(t.benefitCoverageTag)}</span>`
+      : item.benefitCategory === "in_kind"
+      ? `<span class="bd-tag">${escapeHtml(t.benefitInKindTag)}</span>`
+      : item.benefitCategory === "varies"
+      ? `<span class="bd-tag bd-tag-varies">${escapeHtml(t.benefitVariesTag)}</span>`
       : "";
   const warning = item.excluded
     ? `<div class="bd-warning">${WARNING_ICON}<span>${escapeHtml(t.benefitConflictWarning(item.excludedNameShown))}</span></div>`
@@ -430,14 +444,17 @@ function benefitBreakdownRowHtml(item, t) {
       : "";
   // A one_time cash gift isn't recurring — "/yr" on it would assert a
   // yearly cadence the source data never stated (it's only annualized once,
-  // for the year-1 total).
+  // for the year-1 total). Non-cash rows (coverage/in-kind/varies) never
+  // take the suffix either — none of them are a per-year cash figure.
   const suffix =
-    item.benefitCategory === "coverage" || item.benefitType === "one_time" ? "" : t.benefitPerYearSuffix;
+    item.hasAmount && item.benefitCategory === "cash" && item.benefitType !== "one_time"
+      ? t.benefitPerYearSuffix
+      : "";
   return `
     <div class="bd-row${item.excluded ? " bd-row-excluded" : ""}">
       <div class="bd-row-main">
         <span class="bd-name" lang="${chromeLang}">${escapeHtml(item.displayName)}</span>
-        <span class="bd-amount">${amountRangeText(item, t)}${suffix}</span>
+        <span class="bd-amount">${escapeHtml(amountCellText(item, t))}${suffix}</span>
       </div>
       ${byline}
       ${feeNote}
@@ -461,7 +478,14 @@ function renderBenefitDashboard(result) {
   const t = I18N[lang] || I18N.en;
   els.benefitDashboard.hidden = false;
 
-  if (!dashboard.hasAnyAmount) {
+  const inKindItems = dashboard.items.filter((i) => i.benefitCategory === "in_kind" && !i.excluded);
+  const hasVariableSchemes = !!dashboard.hasVariableSchemes;
+
+  // Only the true "nothing to show" case (no cash/coverage amount, no
+  // in-kind benefit, no varies-rate scheme) collapses to the empty state —
+  // a matched list of e.g. only in-kind schemes still deserves its own
+  // dashboard, just with a dash where the cash total would be.
+  if (!dashboard.hasAnyAmount && inKindItems.length === 0 && !hasVariableSchemes) {
     els.benefitDashboard.innerHTML = `
       <div class="benefit-dashboard-card benefit-dashboard-empty">
         <div class="bd-title" lang="${lang}">${escapeHtml(t.benefitDashboardTitle)}</div>
@@ -479,12 +503,13 @@ function renderBenefitDashboard(result) {
     if (i.excluded) i.excludedNameShown = nameById[i.excludedInFavorOf] || i.excludedInFavorOf;
   });
 
-  const cashHeadline =
-    dashboard.cash.high > 0
-      ? dashboard.cash.isRange
-        ? `₹${formatINR(dashboard.cash.low)}–₹${formatINR(dashboard.cash.high)}`
-        : `₹${formatINR(dashboard.cash.high)}`
-      : null;
+  // Conservative by design: when a scheme's amount is a range (e.g.
+  // ₹2,000–5,000/month depending on land size), the headline/tile total
+  // counts only the guaranteed lower bound, never the upper one — the full
+  // range still appears on that scheme's own breakdown row via
+  // amountRangeText(). A citizen should never be told they're "missing out"
+  // on more than they're actually guaranteed.
+  const cashHeadline = dashboard.cash.low > 0 ? `₹${formatINR(dashboard.cash.low)}` : null;
 
   const missingOutHtml = cashHeadline
     ? `<div class="bd-headline">${escapeHtml(t.benefitMissingOut(cashHeadline))}</div>`
@@ -499,7 +524,17 @@ function renderBenefitDashboard(result) {
       </div>`
       : "";
 
-  const breakdownItems = dashboard.items.filter((i) => i.hasAmount);
+  const variesNoteHtml = hasVariableSchemes
+    ? `<p class="bd-varies-note" lang="${lang}">${escapeHtml(t.benefitVariesNote)}</p>`
+    : "";
+
+  // Breakdown lists every matched scheme with something to report: cash and
+  // coverage amounts, plus varies/in_kind rows (rendered with a note/dash by
+  // amountCellText() instead of a fabricated figure) — never silently
+  // dropped, and never blended into the cash/coverage totals above.
+  const breakdownItems = dashboard.items.filter(
+    (i) => i.hasAmount || i.benefitCategory === "varies" || i.benefitCategory === "in_kind"
+  );
   const breakdownHtml = breakdownItems.length
     ? `
       <div class="bd-breakdown">
@@ -519,6 +554,7 @@ function renderBenefitDashboard(result) {
         </div>
         ${coverageTileHtml}
       </div>
+      ${variesNoteHtml}
       ${breakdownHtml}
       <p class="bd-disclaimer" lang="${lang}">${escapeHtml(t.benefitDisclaimer)}</p>
     </div>`;
