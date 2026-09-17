@@ -143,10 +143,10 @@
         "source": "आधिकारिक पोर्टल, राष्ट्रीय जैविक खेती केंद्र।"
       }
     },
-    "benefit_category": "cash",
-    "benefit_type": "one_time",
-    "benefit_amount_min": 50000.0,
-    "benefit_amount_max": 50000.0,
+    "benefit_category": "varies",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
     "application_cost": 0.0
   },
   {
@@ -173,7 +173,7 @@
         "source": "आधिकारिक फसल बीमा पोर्टल, कृषि मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -203,7 +203,7 @@
         "source": "आधिकारिक पोर्टल, जल शक्ति मंत्रालय / कृषि मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -263,7 +263,7 @@
         "source": "आधिकारिक पोर्टल, कृषि एवं किसान कल्याण विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -323,7 +323,7 @@
         "source": "तमिलनाडु कृषि इंजीनियरिंग विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -353,7 +353,7 @@
         "source": "TANGEDCO / तमिलनाडु विद्युत विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -413,7 +413,7 @@
         "source": "तमिलनाडु कृषि विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -443,7 +443,7 @@
         "source": "आधिकारिक e-NAM पोर्टल, कृषि मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -533,7 +533,7 @@
         "source": "TN Industries Dept. / TIIC; आधिकारिक योजना पोर्टल।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -563,7 +563,7 @@
         "source": "आधिकारिक पोर्टल, Khadi & Village Industries Commission."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -743,7 +743,7 @@
         "source": "आधिकारिक पोर्टल, Ministry of MSME."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -953,7 +953,7 @@
         "source": "TN School Education Dept.; आधिकारिक मिशन पोर्टल।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1013,7 +1013,7 @@
         "source": "TN Higher Education Dept.; आधिकारिक योजना पोर्टल।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1133,7 +1133,7 @@
         "source": "आधिकारिक पोर्टल, Ministry of Education."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1223,7 +1223,7 @@
         "source": "Ministry of Social Justice & Empowerment, NSP के माध्यम से।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1253,7 +1253,7 @@
         "source": "Ministry of Social Justice/Minority Affairs, NSP के माध्यम से।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1313,7 +1313,7 @@
         "source": "TN BC/MBC Welfare Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1343,7 +1343,7 @@
         "source": "आधिकारिक पोर्टल, Dept. of School Education & Literacy."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1373,7 +1373,7 @@
         "source": "Ministry of Finance / National Savings Institute."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1463,7 +1463,7 @@
         "source": "TN School Education Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1493,7 +1493,7 @@
         "source": "TN Higher Education Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1553,7 +1553,7 @@
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1583,7 +1583,7 @@
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1643,7 +1643,7 @@
         "source": "आधिकारिक पोर्टल, श्रम और रोजगार मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1673,7 +1673,7 @@
         "source": "आधिकारिक पोर्टल, सामाजिक न्याय और अधिकारिता मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -1763,7 +1763,7 @@
         "source": "तमिलनाडु समाज कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2033,10 +2033,10 @@
         "source": "आधिकारिक पोर्टल, नवीन और नवीकरणीय ऊर्जा मंत्रालय।"
       }
     },
-    "benefit_category": "cash",
-    "benefit_type": "one_time",
-    "benefit_amount_min": 78000.0,
-    "benefit_amount_max": 78000.0,
+    "benefit_category": "varies",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
     "application_cost": 0.0
   },
   {
@@ -2063,7 +2063,7 @@
         "source": "आधिकारिक पोर्टल, नवीन और नवीकरणीय ऊर्जा मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2123,7 +2123,7 @@
         "source": "आधिकारिक पोर्टल, पंचायती राज मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2243,7 +2243,7 @@
         "source": "आधिकारिक पोर्टल, खाद्य और सार्वजनिक वितरण विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2273,7 +2273,7 @@
         "source": "आधिकारिक पोर्टल, खाद्य और सार्वजनिक वितरण विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2333,7 +2333,7 @@
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य प्राधिकरण।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2423,7 +2423,7 @@
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2453,7 +2453,7 @@
         "source": "तमिलनाडु स्वास्थ्य और परिवार कल्याण विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2513,7 +2513,7 @@
         "source": "आधिकारिक जन औषधि पोर्टल, फार्मास्यूटिकल्स विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2543,7 +2543,7 @@
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2573,7 +2573,7 @@
         "source": "आधिकारिक पोर्टल, राष्ट्रीय स्वास्थ्य मिशन (National Health Mission)।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2665,7 +2665,7 @@
         "source": "TN Urban Habitat Development Board (TNUHDB); SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2725,7 +2725,7 @@
         "source": "आधिकारिक पोर्टल, आवास और शहरी मामलों के मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2905,7 +2905,7 @@
         "source": "आधिकारिक पोर्टल, विकलांग व्यक्ति सशक्तिकरण विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -2996,7 +2996,7 @@
         "source": "आधिकारिक पोर्टल, ग्रामीण विकास मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3026,7 +3026,7 @@
         "source": "आधिकारिक पोर्टल, सामाजिक न्याय और अधिकारिता मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3086,7 +3086,7 @@
         "source": "TN मुख्यमंत्री कार्यालय; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "coverage",
+    "benefit_category": "cash",
     "benefit_type": "one_time",
     "benefit_amount_min": 10000.0,
     "benefit_amount_max": 500000.0,
@@ -3146,7 +3146,7 @@
         "source": "आधिकारिक पोर्टल, दिव्यांगजन सशक्तिकरण विभाग।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3176,10 +3176,10 @@
         "source": "आधिकारिक पोर्टल, युवा कार्यक्रम और खेल मंत्रालय।"
       }
     },
-    "benefit_category": "cash",
-    "benefit_type": "annual",
-    "benefit_amount_min": 628000.0,
-    "benefit_amount_max": 628000.0,
+    "benefit_category": "varies",
+    "benefit_type": null,
+    "benefit_amount_min": null,
+    "benefit_amount_max": null,
     "application_cost": 0.0
   },
   {
@@ -3206,7 +3206,7 @@
         "source": "आधिकारिक पोर्टल, युवा कार्यक्रम और खेल मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3266,7 +3266,7 @@
         "source": "आधिकारिक पोर्टल, भारी उद्योग मंत्रालय।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "varies",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3296,7 +3296,7 @@
         "source": "TN परिवहन विभाग; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3416,7 +3416,7 @@
         "source": "आधिकारिक पोर्टल, Ministry of Women & Child Development."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3506,7 +3506,7 @@
         "source": "आधिकारिक पोर्टल, Ministry of Petroleum & Natural Gas."
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
@@ -3536,7 +3536,7 @@
         "source": "TN Food, Civil Supplies & Consumer Protection Dept.; SchemesinIndia.in के माध्यम से संक्षेपित।"
       }
     },
-    "benefit_category": "none",
+    "benefit_category": "in_kind",
     "benefit_type": null,
     "benefit_amount_min": null,
     "benefit_amount_max": null,
